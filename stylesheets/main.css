@@ -1,0 +1,58 @@
+body {
+  width: 100%;
+  margin: 0;
+  background: url(http://subtlepatterns.com/patterns/crossword.png);
+}
+
+.chart {
+  margin-top: 2%;
+  font-family: 'Raleway';
+}
+
+.dot {
+  stroke: #000;
+}
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.bar text {
+  fill: #fff;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #666;
+  shape-rendering: optimizeSpeed;
+}
+
+.tooltip {
+  position: absolute;
+  width: auto;
+  height: 28px;
+  pointer-events: none;
+}
+
+.tip {
+  font-family: 'Raleway';
+  padding: 5px;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #333;
+  margin-left: 10px;
+}
+
+.tip:before {
+  content: "";
+  position: absolute;
+  top: 65%;
+  left: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+  border-left: 20px;
+	border-right:10px solid #333;
+  display: block;
+  width: 0;
+  z-index: 1;
+}

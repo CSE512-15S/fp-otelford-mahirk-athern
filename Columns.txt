@@ -1,0 +1,1 @@
+z	mass	mass_err	SFR	sSFR	Z_Mannucci	Z_Dopita	deltaZ	Z_R23	Z_NHa	q	surf_bright	HaHb	bdec_frac_err	logR23	logNHa	OIII/OII	NII/OII	OIII/SII	NII/SII	Hbeta_ratio	Hdelta_eqw	D4000	vdisp	A_v
