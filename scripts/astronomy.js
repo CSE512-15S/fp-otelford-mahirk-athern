@@ -21,67 +21,85 @@ var tooltip = d3.select("body").append("div")
 
 var svg = d3.select('body').append('svg')
     .attr('class', 'chart')
-    .attr('width', width/2)
+    .attr('width', width)
     .attr('height', height + 10).append('g')
     .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
 var hist1 = d3.select("body")
 	.append("svg")
   .attr('class', 'chart')
-		.attr("width", width/4 + 10)
+		.attr("width", width)
 		.attr("height", (height - margin.top - margin.bottom) + 10)
-	.append("g");
+	.append("g").attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
     // Generate a Bates distribution of 10 random variables.
-    var values = d3.range(100).map(d3.random.bates(10));
-
-    // A formatter for counts.
-    var formatCount = d3.format(",.0f");
-    var x = d3.scale.linear()
-        .domain([0, 1])
-        .range([0, width/4 - 10]);
-
-    // Generate a histogram using twenty uniformly-spaced bins.
-    var data = d3.layout.histogram()
-        .bins(x.ticks(10))
-        (values);
-
-    var y = d3.scale.linear()
-        .domain([0, d3.max(data, function(d) { return d.y; })])
-        .range([height/2 - margin.top - margin.bottom, 0]);
-
-    var histx = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var bar = hist1.selectAll(".bar")
-        .data(data)
-      .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-
-    bar.append("rect")
-        .attr("x", 1)
-        .attr("width", x(data[0].dx) - 1)
-        .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y(d.y); });
-
-    bar.append("text")
-        .attr("dy", ".75em")
-        .attr("y", 6)
-        .attr("x", x(data[0].dx) / 2)
-        .attr("text-anchor", "middle")
-        .text(function(d) { return formatCount(d.y); });
-
-    hist1.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
-        .call(histx);
+    // var values = d3.range(100).map(d3.random.bates(10));
+    //
+    // // A formatter for counts.
+    // var formatCount = d3.format(",.0f");
+    // var x = d3.scale.linear()
+    //     .domain([0, 1])
+    //     .range([0, width/4 - 10]);
+    //
+    // // Generate a histogram using twenty uniformly-spaced bins.
+    // var data = d3.layout.histogram()
+    //     .bins(x.ticks(10))
+    //     (values);
+    //
+    // var y = d3.scale.linear()
+    //     .domain([0, d3.max(data, function(d) { return d.y; })])
+    //     .range([height/2 - margin.top - margin.bottom, 0]);
+    //
+    // var histx = d3.svg.axis()
+    //     .scale(x)
+    //     .orient("bottom");
+    //
+    // var histy = d3.svg.axis()
+    //         .scale(y)
+    //         .orient("left");
+    //
+    // var bar = hist1.selectAll(".bar")
+    //     .data(data)
+    //   .enter().append("g")
+    //     .attr("class", "bar")
+    //     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+    //
+    // bar.append("rect")
+    //     .attr("x", 1)
+    //     .attr("width", x(data[0].dx) - 1)
+    //     .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y(d.y); });
+    //
+    // bar.append("text")
+    //     .attr("dy", ".75em")
+    //     .attr("y", 6)
+    //     .attr("x", x(data[0].dx) / 2)
+    //     .attr("text-anchor", "middle")
+    //     .text(function(d) { return formatCount(d.y); });
+    //
+    // hist1.append("g")
+    //     .attr("class", "x axis")
+    //     .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
+    //     .call(histx);
+    //
+    // hist1.append("g")
+    //     .attr("class", "y axis")
+    //     .call(histy)
+    //     .append("text")
+    //     .attr("transform", "rotate(-90)")
+    //     .attr("y", 6)
+    //     .attr("dy", ".7em")
+    //     .style("text-anchor", "end")
+    //     .text("Number of Galaxies");
 
 
 d3.csv("trial.csv", function(error, data) {
+  var vals = [];
   data.forEach(function(d) {
       d.SFR = +d.SFR;
       d.mass = +d.mass;
+      vals.push(+d["Z_Dopita"]);
   });
+
+//SCATTER PLOT
 
   xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
@@ -131,7 +149,70 @@ d3.csv("trial.csv", function(error, data) {
                .style("opacity", 0);
       });
 
+// HISTOGRAMS
+//
 
+console.log(vals);
+
+var numOfBin = 3;
+
+// A formatter for counts.
+var formatCount = d3.format(",.0f");
+var x = d3.scale.linear()
+    .domain([Math.floor(d3.min(vals)), Math.ceil(d3.max(vals))])
+    .range([0, width]);
+
+// Generate a histogram using twenty uniformly-spaced bins.
+var bardata = d3.layout.histogram()
+    .bins(numOfBin)
+    (vals);
+
+
+
+var y = d3.scale.linear()
+    .domain([0, d3.max(bardata, function(d) { return d.y; })])
+    .range([height/2 - margin.top - margin.bottom, 0]);
+
+var histx = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var histy = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+var bar = hist1.selectAll(".bar")
+    .data(bardata)
+  .enter().append("g")
+    .attr("class", "bar")
+    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+bar.append("rect")
+    .attr("x", 1)
+    .attr("width", ((width/4)/numOfBin) - 1)
+    .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y(d.y); });
+
+bar.append("text")
+    .attr("dy", ".75em")
+    .attr("y", 6)
+    .attr("x", x(bardata[0].dx) / 2)
+    .attr("text-anchor", "middle")
+    .text(function(d) { return formatCount(d.y); });
+
+hist1.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
+    .call(histx);
+
+hist1.append("g")
+    .attr("class", "y axis")
+    .call(histy)
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".7em")
+    .style("text-anchor", "end")
+    .text("Number of Galaxies");
 
 });
 
