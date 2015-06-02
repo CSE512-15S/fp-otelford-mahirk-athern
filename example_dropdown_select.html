@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+
+<style type="text/css">
+    svg .axis path,
+    svg .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    svg .datapoint {
+        fill: #569BBD;
+        fill-opacity: 0.5;
+        stroke: #569BBD;
+    }
+    #svgWrapper {
+        display: inline-block;
+    }
+    #panelWrapper {
+        width: 250px;
+        border: solid #808080 1px;
+        padding: 10px;
+        display: inline-block;
+        position: fixed;
+        margin-top: 10px;
+    }
+    .separator {
+        margin-bottom: 10px;
+        height: 1px;
+        background-color: #808080;
+    }
+    .dropdown-toggle {
+        width: 200px;
+    }
+</style>
+
+<div>
+    <div id="svgWrapper">
+        <svg></svg>
+    </div>
+    <div id="panelWrapper">
+        <div>
+            <p>
+                Scatterplot of various galaxy parameters.
+            </p>
+            <div class="separator"></div>
+            <p> X (horizontal axis) </p>
+            <select id='xVar', onchange="MyFunction()">
+		<option value="z">Redshift</option>
+  		<option value="mass">Stellar Mass</option>
+  		<option value="mass_err">Mass Uncertainty</option>
+  		<option value="SFR">Star Formation Rate</option>
+  		<option value="sSFR">Specific Star Formation Rate</option>
+  		<option value="Z_Mannucci">Metallicity (M10)</option>
+  		<option value="Z_Dopita">Metallicity (D13)</option>
+  		<option value="deltaZ">Metallicity Difference (D13-M10)</option>
+  		<option value="Z_R23">Metallicity (R23)</option>
+  		<option value="Z_NHa">Metallicity (N/Halpha)</option>
+  		<option value="q">Ionization Parameter</option>
+		<option value="surf_bright">Surface Brightness</option>
+  		<option value="HaHb">Balmer Decrement</option>
+  		<option value="bdec_frac_err">Balmer Decrement Fractional Error</option>
+  		<option value="logR23">R23</option>
+  		<option value="logNHa">N/Halpha</option>
+  		<option value="OIII/OII">OIII/OII</option>
+  		<option value="NII/OII">NII/OII</option>
+  		<option value="OIII/SII">OIII/SII</option>
+  		<option value="NII/SII">NII/SII</option>
+  		<option value="Hbeta_ratio">Hbeta Absorption/Emission</option>
+  		<option value="Hdelta_eqw">Hdelta Equivalent Width</option>
+  		<option value="D4000">D4000</option>
+  		<option value="vdisp">Velocity Dispersion</option>
+  		<option value="A_v">Extinction in V-band</option>
+	    </select>
+            <br/>
+            <p>Y (vertical axis) </p>
+            <select id='yVar', onchange="MyFunction()">
+		<option value="z">Redshift</option>
+  		<option value="mass">Stellar Mass</option>
+  		<option value="mass_err">Mass Uncertainty</option>
+  		<option value="SFR">Star Formation Rate</option>
+  		<option value="sSFR">Specific Star Formation Rate</option>
+  		<option value="Z_Mannucci">Metallicity (M10)</option>
+  		<option value="Z_Dopita">Metallicity (D13)</option>
+  		<option value="deltaZ">Metallicity Difference (D13-M10)</option>
+  		<option value="Z_R23">Metallicity (R23)</option>
+  		<option value="Z_NHa">Metallicity (N/Halpha)</option>
+  		<option value="q">Ionization Parameter</option>
+		<option value="surf_bright">Surface Brightness</option>
+  		<option value="HaHb">Balmer Decrement</option>
+  		<option value="bdec_frac_err">Balmer Decrement Fractional Error</option>
+  		<option value="logR23">R23</option>
+  		<option value="logNHa">N/Halpha</option>
+  		<option value="OIII/OII">OIII/OII</option>
+  		<option value="NII/OII">NII/OII</option>
+  		<option value="OIII/SII">OIII/SII</option>
+  		<option value="NII/SII">NII/SII</option>
+  		<option value="Hbeta_ratio">Hbeta Absorption/Emission</option>
+  		<option value="Hdelta_eqw">Hdelta Equivalent Width</option>
+  		<option value="D4000">D4000</option>
+  		<option value="vdisp">Velocity Dispersion</option>
+  		<option value="A_v">Extinction in V-band</option>
+	    </select>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+var variables = ["z", "mass", "mass_err", "SFR", "sSFR", "Z_Mannucci", "Z_Dopita", "deltaZ", "Z_R23", "Z_NHa", "q", "surf_bright", "HaHb", "bdec_frac_err", "logR23", "logNHa", "OIII/OII", "NII/OII", "OIII/SII", "NII/SII", "Hbeta_ratio", "Hdelta_eqw", "D4000", "vdisp", "A_v"];
+
+var names = {"z":"Redshift", "mass":"Stellar Mass", "mass_err":"Mass Uncertainty", "SFR":"Star Formation Rate", "sSFR":"Specific Star Formation Rate", "Z_Mannucci":"Metallicity (M10)", "Z_Dopita":"Metallicity (D13)", "deltaZ":"Metallicity Difference (D13-M10)", "Z_R23":"Metallicity (R23)", "Z_NHa":"Metallicity (N/Halpha)", "q":"Ionization Parameter", "surf_bright":"Surface Brightness", "HaHb":"Balmer Decrement", "bdec_frac_err":"Balmer Decrement Fractional Error", "logR23":"R23", "logNHa":"N/Halpha", "OIII/OII":"OIII/OII", "NII/OII":"NII/OII", "OIII/SII":"OIII/SII", "NII/SII":"NII/SII", "Hbeta_ratio":"Hbeta Absorption/Emission", "Hdelta_eqw":"Hdelta Equivalent Width", "D4000":"D4000", "vdisp":"Velocity Dispersion", "A_v":"Extinction in V-band"};
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 350 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .ticks(5)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+var scatterplot = function(var1, var2){
+
+    d3.csv("data/data_good_small.csv", function(error, data) {
+        d3.selectAll(".graph-component").remove();
+
+        data.forEach(function(d) {
+            d[var1] = +d[var1];
+            d[var2] = +d[var2];
+        });
+
+	x.domain([d3.min(data, function(d) { return d[var1]; })-0.5, d3.max(data, function(d) { return d[var1]; })+0.5]).nice();
+	y.domain([d3.min(data, function(d) { return d[var2]; })-0.5, d3.max(data, function(d) { return d[var2]; })+0.5]).nice();
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .classed("graph-component", true)
+        .append("text")
+            .attr("class", "label graph-component")
+            .attr("x", width)
+            .attr("y", -10)
+            .style("text-anchor", "end")
+            .text(names[var1]);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .classed("graph-component", true)
+        .append("text")
+            .attr("class", "label graph-component")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 10)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(names[var2])
+
+        svg.selectAll(".datapoint")
+            .data(data)
+        .enter().append("circle")
+            .attr("class", "datapoint graph-component")
+            .attr("r", 3)
+            .attr("cx", function(d) { return x(d[var1]); })
+            .attr("cy", function(d) { return y(d[var2]); })
+
+        svg.selectAll(".datapoint").each(function(d){
+            insertHTML = "";
+            variables.forEach(function(variable){
+                insertHTML = insertHTML + variable + " : " + d[variable] + "<br/>"
+            });
+
+            options = {
+                container: 'body',
+                html: true,
+                placement: "right",
+                template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+                title: insertHTML,
+                trigger: 'hover focus click'
+            }
+        });
+
+        svg.selectAll(".datapoint")
+            .on("mouseover", function(d){
+                //$(this).tooltip('show');
+
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html((function(){
+                    str = "";
+                    variables.forEach(function(element, index, array){
+                        str = str + element + " : " + d[element] + "<br/>"
+                    });
+                    return str;
+                })())
+                    .style("left", (d3.event.pageX + 6) + "px")
+                    .style("top", (d3.event.pageY - 65) + "px");
+            })
+            .on("mouseout", function(d) {
+                //$(this).tooltip('hide');
+
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 0);
+            });
+        });
+    };
+
+function MyFunction() {
+    var1 = document.getElementById("xVar").value;
+    var2 = document.getElementById("yVar").value;
+    scatterplot(var1, var2);
+}
+
+scatterplot('mass','SFR');
+document.getElementById("xVar").value = 'mass';
+document.getElementById("yVar").value = 'SFR';
+
+</script>
+
+</body>
