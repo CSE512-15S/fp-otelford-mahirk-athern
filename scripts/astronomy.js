@@ -3,13 +3,13 @@ width = $(window).width() - margin.left - margin.right,
 height = $(window).height() - margin.top - margin.bottom- 100,
 columns = ["z", "mass", "mass_err", "SFR", "sSFR", "Z_Mannucci", "Z_Dopita", "deltaZ", "Z_R23", "Z_NHa", "q", "surf_bright", "HaHb", "bdec_frac_err", "logR23", "logNHa", "OIII/OII", "NII/OII", "OIII/SII", "NII/SII", "Hbeta_ratio", "Hdelta_eqw", "D4000", "vdisp", "A_v"];
 
-var xValue = function(d) { return +d.SFR;}, // data -> value
-    xScale = d3.scale.linear().range([0, width/2 - margin.left - margin.right ]), // value -> display
+var xValue = function(d) { return +d.sSFR;}, // data -> value
+    xScale = d3.scale.linear().range([0, width - margin.left - margin.right ]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return +d.mass;}, // data -> value
+var yValue = function(d) { return +d.q;}, // data -> value
     yScale = d3.scale.linear().range([height - margin.top - margin.bottom, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -18,49 +18,71 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-
-var svg = d3.select('body').append('svg')
+var maindiv = d3.select("body").append("div");
+maindiv.append("div").attr("style", "text-align: center;").html("Hiya, add your select menu here");
+var svg = maindiv.append('svg')
     .attr('class', 'chart')
     .attr('width', width)
     .attr('height', height + 10).append('g')
     .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-var hist1 = d3.select("body")
+
+// CREATE DIVS
+var div1 = d3.select("body").append("div").attr("style", "display: inline-block;");
+var div2 = d3.select("body").append("div").attr("style", "display: inline-block;");
+var div3 = d3.select("body").append("div").attr("style", "display: inline-block;");
+var div4 = d3.select("body").append("div").attr("style", "display: inline-block;");
+
+// SELECT MENUS
+
+div1.append("div").attr("style", "text-align: center;").html("Hiya, add your select menu here");
+div2.append("div").attr("style", "text-align: center;").html("Hiya, add your select menu here");
+div3.append("div").attr("style", "text-align: center;").html("Hiya, add your select menu here");
+div4.append("div").attr("style", "text-align: center;").html("Hiya, add your select menu here");
+
+// CREATE HISTORGRAMS
+var hist1 = div1
 	.append("svg")
   .attr('class', 'chart')
-		.attr("width", width)
-		.attr("height", (height - 2*margin.top - 2*margin.bottom))
+		.attr("width", width/2)
+		.attr("height", (height/2 + 20) )
 	.append("g").attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-var hist2 = d3.select("body")
+
+var hist2 = div2
   	.append("svg")
     .attr('class', 'chart')
-  		.attr("width", width)
-  		.attr("height", (height - 2*margin.top - 2*margin.bottom) + 10)
+  		.attr("width", width/2)
+  		.attr("height", (height/2 + 20) )
   	.append("g").attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-var hist3 = d3.select("body")
+
+var hist3 = div3
     	.append("svg")
       .attr('class', 'chart')
-    		.attr("width", width)
-    		.attr("height", (height - 2*margin.top - 2*margin.bottom) + 10)
+    		.attr("width", width/2)
+    		.attr("height", (height/2 + 20) )
     	.append("g").attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-var hist4 = d3.select("body")
+
+var hist4 = div4
       	.append("svg")
         .attr('class', 'chart')
-      		.attr("width", width)
-      		.attr("height", (height - 2*margin.top - 2*margin.bottom) + 10)
+      		.attr("width", width/2)
+      		.attr("height", (height/2 + 20) )
       	.append("g").attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-d3.csv("data_clean.csv", function(error, data) {
+
+
+
+d3.csv("data/data_good_small.csv", function(error, data) {
   var valshist1 = [];
   var valshist2 = [];
   var valshist3 = [];
   var valshist4 = [];
   data.forEach(function(d) {
-      d.SFR = +d.SFR;
-      d.mass = +d.mass;
+      d.sSFR = +d.sSFR;
+      d.q = +d.q;
       valshist1.push(+d["Z_Dopita"]);
       valshist2.push(+d["sSFR"]);
       valshist3.push(+d["Z_Mannucci"]);
@@ -78,10 +100,10 @@ d3.csv("data_clean.csv", function(error, data) {
       .call(xAxis)
     .append("text")
       .attr("class", "label")
-      .attr("dx", width/2-margin.left)
+      .attr("dx", width-margin.left)
       .attr("dy", "3em")
       .style("text-anchor", "end")
-      .text("Star Formation Rate (SFR), M⊕/yr");
+      .text("Specific Star Formation Rate (sSFR), M⊕/yr");
 
   // y-axis
   svg.append("g")
@@ -93,7 +115,7 @@ d3.csv("data_clean.csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Mass, M⊕");
+      .text("q");
 
   svg.selectAll(".dot")
         .data(data)
@@ -108,7 +130,7 @@ d3.csv("data_clean.csv", function(error, data) {
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-          tooltip.html("<div class=\"tip\"> Mass:  " + d.mass + " M⊕ <br/> SFR:  " + d.SFR + " M⊕/yr </div>")
+          tooltip.html("<div class=\"tip\"> q:  " + d.q + " M⊕ <br/> sSFR:  " + d.sSFR + " M⊕/yr </div>")
                .style("left", (d3.event.pageX + 10) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
       })
@@ -119,7 +141,12 @@ d3.csv("data_clean.csv", function(error, data) {
                .style("opacity", 0);
       });
 
+
+
 // HISTOGRAMS
+
+var histwidth = width/2 - margin.right - margin.left;
+
 // HISTOGRAMS 1
 
 var tickshist1 = 12;
@@ -128,7 +155,7 @@ var tickshist1 = 12;
 var formatCount = d3.format(",.0f");
 var x = d3.scale.linear()
     .domain([Math.floor(d3.min(valshist1)), Math.ceil(d3.max(valshist1))])
-    .range([0, width/2]);
+    .range([0, histwidth]);
 
 // Generate a histogram using twenty uniformly-spaced bins.
 var bardata = d3.layout.histogram()
@@ -154,7 +181,7 @@ var bar = hist1.selectAll(".bar")
     .attr("class", "bar")
     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
-var exactwidth = (((width/2)/x.ticks(tickshist1).length) - 1)
+var exactwidth = (((histwidth)/x.ticks(tickshist1).length) - 1)
 
 bar.append("rect")
     .attr("x", 1)
@@ -167,7 +194,7 @@ bar.append("text")
     .attr("y", 6)
     .attr("x", exactwidth/2 )
     .attr("text-anchor", "middle")
-    .text(function(d) { return formatCount(d.y); });
+    .text(function(d) { var c = formatCount(d.y); if((d.y) > 15){ return c; }; });
 
 hist1.append("g")
     .attr("class", "x axis")
@@ -200,7 +227,7 @@ var tickshist2 = 10;
 
 var x2 = d3.scale.linear()
     .domain([Math.floor(d3.min(valshist2))-1, Math.ceil(d3.max(valshist2))+1])
-    .range([0, width/2]);
+    .range([0, histwidth]);
 
 // Generate a histogram using twenty uniformly-spaced bins.
 var bardata2 = d3.layout.histogram()
@@ -226,7 +253,7 @@ var bar2 = hist2.selectAll(".bar")
     .attr("transform", function(d) { return "translate(" + x2(d.x) + "," + y2(d.y) + ")"; });
 
 
-var exactwidth2 = (((width/2)/x2.ticks(tickshist2).length) - 1)
+var exactwidth2 = (((histwidth)/x2.ticks(tickshist2).length) - 1)
 
 bar2.append("rect")
     .attr("x", 1)
@@ -239,7 +266,7 @@ bar2.append("text")
     .attr("y", 6)
     .attr("x", exactwidth2/2 )
     .attr("text-anchor", "middle")
-    .text(function(d) { return formatCount(d.y); });
+    .text(function(d) {  var c = formatCount(d.y); if((d.y) > 15){ return c; };  });
 
 hist2.append("g")
     .attr("class", "x axis")
@@ -272,7 +299,7 @@ var tickshist3 = 10;
 
     var x3 = d3.scale.linear()
         .domain([Math.floor(d3.min(valshist3))-1, Math.ceil(d3.max(valshist3))+1])
-        .range([0, width/2]);
+        .range([0, histwidth]);
 
     // Generate a histogram using twenty uniformly-spaced bins.
     var bardata3 = d3.layout.histogram()
@@ -298,7 +325,7 @@ var tickshist3 = 10;
         .attr("transform", function(d) { return "translate(" + x3(d.x) + "," + y3(d.y) + ")"; });
 
 
-    var exactwidth3 = (((width/2)/x3.ticks(tickshist3).length) - 1);
+    var exactwidth3 = (((histwidth)/x3.ticks(tickshist3).length) - 1);
     bar3.append("rect")
         .attr("x", 1)
         .attr("width", exactwidth3)
@@ -310,7 +337,7 @@ var tickshist3 = 10;
         .attr("y", 6)
         .attr("x", exactwidth3/2 )
         .attr("text-anchor", "middle")
-        .text(function(d) { return formatCount(d.y); });
+        .text(function(d) {  var c = formatCount(d.y); if((d.y) > 15){ return c; };  });
 
     hist3.append("g")
         .attr("class", "x axis")
@@ -339,11 +366,11 @@ var tickshist3 = 10;
 // /  HISTOGRAMS 4
 
 
-var tickshist4 = 20;
+var tickshist4 = 14;
 
   var x4 = d3.scale.linear()
       .domain([Math.floor(d3.min(valshist4))-1, Math.ceil(d3.max(valshist4))+1])
-      .range([0, width/2]);
+      .range([0, histwidth]);
 
   // Generate a histogram using twenty uniformly-spaced bins.
   var bardata4 = d3.layout.histogram()
@@ -369,7 +396,7 @@ var tickshist4 = 20;
       .attr("transform", function(d) { return "translate(" + x4(d.x) + "," + y4(d.y) + ")"; });
 
 
-  var exactwidth4 = (((width/2)/x4.ticks(tickshist4).length) - 1);
+  var exactwidth4 = (((histwidth)/x4.ticks(tickshist4).length) - 1);
   bar4.append("rect")
       .attr("x", 1)
       .attr("width", exactwidth4)
@@ -381,7 +408,7 @@ var tickshist4 = 20;
       .attr("y", 6)
       .attr("x", exactwidth4/2 )
       .attr("text-anchor", "middle")
-      .text(function(d) { return formatCount(d.y); });
+      .text(function(d) {  var c = formatCount(d.y); if((d.y) > 15){ return c; };  });
 
   hist4.append("g")
       .attr("class", "x axis")
