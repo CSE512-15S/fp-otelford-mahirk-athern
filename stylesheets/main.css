@@ -9,17 +9,24 @@ body {
   font-family: 'Raleway';
 }
 
+.histext {
+  fill: #000;
+}
+
 .dot {
   stroke: #000;
 }
+
+.dot2 {
+  stroke: #000;
+}
+
+
 .bar rect {
   fill: steelblue;
   shape-rendering: crispEdges;
 }
 
-.bar text {
-  fill: #fff;
-}
 .axis path,
 .axis line {
   fill: none;
