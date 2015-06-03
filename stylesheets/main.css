@@ -50,6 +50,30 @@ body {
   margin-left: 10px;
 }
 
+.mainselect {
+  text-align: center;
+  margin-top: 10%;
+  margin-left: 65%;
+  display: inline-block;
+  position: absolute;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.mainselect select {
+  display: block;
+  margin-top: 25px;
+}
+
+.mainselect b {
+  font-family: Raleway;
+}
+
+#maindiv {
+  margin-bottom: 20px;
+}
+
 .tip:before {
   content: "";
   position: absolute;
