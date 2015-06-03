@@ -130,18 +130,22 @@ d3.csv("data/data_good_small.csv", function(error, data) {
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-          tooltip.html("<div class=\"tip\"> q:  " + d.q + " M⊕ <br/> sSFR:  " + d.sSFR + " M⊕/yr </div>")
+          tooltip.htm
+          l("<div class=\"tip\"> q:  " + d.q + " M⊕ <br/> sSFR:  " + d.sSFR + " M⊕/yr </div>")
                .style("left", (d3.event.pageX + 10) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
       })
       .on("mouseout", function(d) {
-        d3.select(this).attr("r", 3.5 ).style("fill", "#333");
+        if (d3.select(this).classed("selected")) {
+          d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
+        }
+        else {
+          d3.select(this).attr("r", 3.5 ).style("fill", "#333");
+        }
           tooltip.transition()
                .duration(500)
                .style("opacity", 0);
       });
-
-
 
 // HISTOGRAMS
 
@@ -443,3 +447,69 @@ var tickshist4 = 14;
 //     vals.
 //   }
 // }
+
+// Brush and Linking
+var brush = d3.svg.brush()
+            .x(xScale)
+            .y(yScale)
+            .on("brushstart", brushstart)
+            .on("brush", brushmove)
+            .on("brushend", brushend);
+/*            .on('brushstart', function() {
+              // todo
+            })
+            .on('brushend', function() {
+              // todo
+            });
+*/
+
+svg.append("g")
+  .attr("class", "brush")
+  .call(brush);
+
+var brushCell;
+
+function brushstart(p) {
+  if (brushCell != this) {
+    d3.select(brushCell).call(brush.clear());
+    brushCell = this;
+  }
+}
+
+function brushmove(p) {
+  var e = brush.extent();
+
+  // histogram data
+  var selhist1 = [];
+  var selhist2 = [];
+  var selhist3 = [];
+  var selhist4 = [];
+
+  // class dots in selected area and color appropriately
+  svg.selectAll("circle").classed("selected", function(d) {
+    var isSelected = e[0][0] < xValue(d) && xValue(d) < e[1][0] 
+            && e[0][1] < yValue(d) && yValue(d) < e[1][1];
+
+    if (isSelected) {
+      // change to orange
+      d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
+
+      // add appropriate field to histogram data
+      selhist1.push(+d["Z_Dopita"]);
+      selhist2.push(+d["sSFR"]);
+      selhist3.push(+d["Z_Mannucci"]);
+      selhist4.push(+d["mass_err"]);
+    } else {
+      // keep black
+      d3.select(this).attr("r", 3.5 ).style("fill", "#333");
+    }
+
+    return isSelected;
+  })
+
+  // histogram bars
+}
+
+function brushend(p) {
+  if (brush.empty()) svg.selectAll(".selected").classed("selected", false);
+}
