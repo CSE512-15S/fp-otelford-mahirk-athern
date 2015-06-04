@@ -2,7 +2,10 @@ var margin = {top: 40, right: 40, bottom: 40, left:100},
 width = $(window).width() - margin.left - margin.right,
 height = $(window).height() - margin.top - margin.bottom- 100,
 columns = ["z", "mass", "mass_err", "SFR", "sSFR", "Z_Mannucci", "Z_Dopita", "deltaZ", "Z_R23", "Z_NHa", "q", "surf_bright", "HaHb", "bdec_frac_err", "logR23", "logNHa", "OIII/OII", "NII/OII", "OIII/SII", "NII/SII", "Hbeta_ratio", "Hdelta_eqw", "D4000", "vdisp", "A_v"];
-
+var valshist1 = [];
+var valshist2 = [];
+var valshist3 = [];
+var valshist4 = [];
 
 
 var maindiv = d3.select("body").append("div").attr("id", "maindiv");
@@ -232,10 +235,11 @@ var hd1 = "Z_Dopita", hd2 = "sSFR"  , hd3 = "Z_Mannucci", hd4 = "mass_err";
 function updateHist1(val) {
   hd1 = val;
   d3.csv("data/data_good_small.csv", function(error, data) {
-    var valshist1 = [];
+    var valshist = [];
     data.forEach(function(d) {
-        valshist1.push(+d[hd1]);
+        valshist.push(+d[hd1]);
     });
+		valshist1 = valshist;
     d3.selectAll(".hist1").remove();
     createhist1(histwidth, formatCount, valshist1, hd1);
   });
@@ -248,8 +252,9 @@ function updateHist2(val) {
     data.forEach(function(d) {
         valshist.push(+d[hd2]);
     });
+		valshist2 = valshist;
     d3.selectAll(".hist2").remove();
-    createhist2(histwidth, formatCount, valshist, hd2);
+    createhist2(histwidth, formatCount, valshist2, hd2);
   });
 }
 
@@ -260,8 +265,9 @@ function updateHist3(val) {
     data.forEach(function(d) {
         valshist.push(+d[hd3]);
     });
+		valshist3 = valshist;
     d3.selectAll(".hist3").remove();
-    createhist3(histwidth, formatCount, valshist, hd3);
+    createhist3(histwidth, formatCount, valshist3, hd3);
   });
 }
 
@@ -273,15 +279,15 @@ function updateHist4(val) {
     data.forEach(function(d) {
         valshist.push(+d[hd4]);
     });
+		valshist4 = valshist;
     d3.selectAll(".hist4").remove();
-    createhist4(histwidth, formatCount, valshist, hd4);
+    createhist4(histwidth, formatCount, valshist4, hd4);
   });
 }
 
 
 
-function createhist1(histwidth, formatCount, valshist1, val) {
-  console.log(val);
+function createhist1(histwidth, formatCount, valshist1, val, selhist) {
   var tickshist1 = 12;
   var x = d3.scale.linear()
       .domain([Math.floor(d3.min(valshist1)), Math.ceil(d3.max(valshist1))])
@@ -326,7 +332,26 @@ function createhist1(histwidth, formatCount, valshist1, val) {
       .attr("text-anchor", "middle")
       .text(function(d) { var c = formatCount(d.y); if((d.y) > 15){ return c; }; });
 
-val = val.split("_");
+if(selhist) {
+	var seldata = d3.layout.histogram()
+			.bins(x.ticks(tickshist1))
+			(selhist);
+	var selbar = hist1.selectAll(".bar2")
+	    .data(seldata)
+	  .enter().append("g")
+	    .attr("class", "hist1 bar2 tester")
+	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+			selbar.append("rect")
+		      .attr("x", 1)
+		      .attr("width", exactwidth)
+		      .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y(d.y); });
+
+
+}
+
+// Axis
+
+	val = val.split("_");
 
   hist1.append("g")
       .attr("class", "x axis hist1")
@@ -685,39 +710,6 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
 
-// Data
-
-d3.csv("data/data_good_small.csv", function(error, data) {
-  var valshist1 = [];
-  var valshist2 = [];
-  var valshist3 = [];
-  var valshist4 = [];
-  data.forEach(function(d) {
-      valshist1.push(+d[hd1]);
-      valshist2.push(+d[hd2]);
-      valshist3.push(+d[hd3]);
-      valshist4.push(+d[hd4]);
-  });
-
-//SCATTER PLOT
-
-createscatter(data, xvar, yvar);
-createhist1(histwidth, formatCount, valshist1, hd1);
-createhist2(histwidth, formatCount, valshist2, hd2);
-createhist3(histwidth, formatCount, valshist3, hd3);
-createhist4(histwidth, formatCount, valshist4, hd4);
-
-
-});
-
-// function collectdata (data) {
-//   var vals;
-//   for(var i = 0; i < columns.length; i++){
-//     vals.
-//   }
-// }
-
-
 // Brush and linking
 var brushCell;
 var brush;
@@ -732,26 +724,15 @@ function brushstart(p) {
 function brushmove(p) {
   var e = brush.extent();
 
-  // histogram data
-  var selhist1 = [];
-  var selhist2 = [];
-  var selhist3 = [];
-  var selhist4 = [];
 
   // class dots in selected area and color appropriately
   svg.selectAll("circle").classed("selected", function(d) {
-    var isSelected = e[0][0] < xValue(d) && xValue(d) < e[1][0] 
+    var isSelected = e[0][0] < xValue(d) && xValue(d) < e[1][0]
             && e[0][1] < yValue(d) && yValue(d) < e[1][1];
 
     if (isSelected) {
       // change to orange
       d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
-
-      // add appropriate field to histogram data
-      selhist1.push(+d[hd1]);
-      selhist2.push(+d[hd2]);
-      selhist3.push(+d[hd3]);
-      selhist4.push(+d[hd4]);
     } else {
       // keep black
       d3.select(this).attr("r", 3.5 ).style("fill", "#333");
@@ -764,5 +745,50 @@ function brushmove(p) {
 }
 
 function brushend(p) {
-  if (brush.empty()) svg.selectAll(".selected").classed("selected", false);
+
+	if (brush.empty()) {
+		svg.selectAll(".selected").classed("selected", false);
+		return true;
 }
+
+	// histogram data
+	var selhist1 = [];
+	var selhist2 = [];
+	var selhist3 = [];
+	var selhist4 = [];
+	var e = brush.extent();
+	svg.selectAll("circle").classed("selected", function(d) {
+    var isSelected = e[0][0] < xValue(d) && xValue(d) < e[1][0]
+            && e[0][1] < yValue(d) && yValue(d) < e[1][1];
+	if (isSelected) {
+		// change to orange
+		d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
+		selhist1.push(+d[hd1]);
+		selhist2.push(+d[hd2]);
+		selhist3.push(+d[hd3]);
+		selhist4.push(+d[hd4]);
+	}
+});
+createhist1(histwidth, formatCount, valshist1, hd1, selhist1);
+
+}
+
+// Data
+
+d3.csv("data/data_good_small.csv", function(error, data) {
+  data.forEach(function(d) {
+      valshist1.push(+d[hd1]);
+      valshist2.push(+d[hd2]);
+      valshist3.push(+d[hd3]);
+      valshist4.push(+d[hd4]);
+  });
+
+
+createscatter(data, xvar, yvar);
+createhist1(histwidth, formatCount, valshist1, hd1);
+createhist2(histwidth, formatCount, valshist2, hd2);
+createhist3(histwidth, formatCount, valshist3, hd3);
+createhist4(histwidth, formatCount, valshist4, hd4);
+
+
+});
