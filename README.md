@@ -6,12 +6,12 @@ Grace Telford, Mahir Kothary, Nicole Atherly {otelford, mahirk, athern}@uw.edu
 A breakdown of how the work was split among the group members and a commentary on the research/development process.
 
 ## Summary Image
-![Overview](overview.png)
+![Overview](https://github.com/CSE512-15S/fp-otelford-mahirk-athern/raw/gh-pages/summary.png)
 
 ## Abstract
 Abstract will go here.
 
-[Poster](https://github.com/CSE512-15S/fp-jheer-domoritz-jsnydes/raw/master/final/poster-jheer-kanitw.pdf),
+[Poster](https://github.com/CSE512-15S/fp-otelford-mahirk-athern/raw/gh-pages/final/poster-otelford-mahirk-athern.pdf),
 [Final Paper](https://github.com/CSE512-15S/fp-jheer-domoritz-jsnydes/raw/master/final/paper-jheer-kanitw.pdf) 
 
 ## Running Instructions
