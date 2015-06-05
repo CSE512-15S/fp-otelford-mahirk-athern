@@ -241,7 +241,17 @@ function updateHist1(val) {
     });
 		valshist1 = valshist;
     d3.selectAll(".hist1").remove();
-    createhist1(histwidth, formatCount, valshist1, hd1);
+    
+    if (brush.empty()) {
+      createhist1(histwidth, formatCount, valshist1, hd1);
+    } else {
+      // histogram data
+      svg.selectAll(".selected").classed("selected", function(d) {
+          selhist4.push(+d[hd1]);
+          return true;
+      });
+      createhist1(histwidth, formatCount, valshist1, hd1, selhist1);
+    }
   });
 }
 
@@ -254,7 +264,17 @@ function updateHist2(val) {
     });
 		valshist2 = valshist;
     d3.selectAll(".hist2").remove();
-    createhist2(histwidth, formatCount, valshist2, hd2);
+    
+    if (brush.empty()) {
+      createhist2(histwidth, formatCount, valshist2, hd2);
+    } else {
+      // histogram data
+      svg.selectAll(".selected").classed("selected", function(d) {
+          selhist2.push(+d[hd2]);
+          return true;
+      });
+      createhist2(histwidth, formatCount, valshist2, hd2, selhist2);
+    }
   });
 }
 
@@ -267,7 +287,17 @@ function updateHist3(val) {
     });
 		valshist3 = valshist;
     d3.selectAll(".hist3").remove();
-    createhist3(histwidth, formatCount, valshist3, hd3);
+
+    if (brush.empty()) {
+      createhist3(histwidth, formatCount, valshist3, hd3);
+    } else {
+      // histogram data
+      svg.selectAll(".selected").classed("selected", function(d) {
+          selhist3.push(+d[hd3]);
+          return true;
+      });
+      createhist3(histwidth, formatCount, valshist3, hd3, selhist3);
+    }
   });
 }
 
@@ -281,7 +311,16 @@ function updateHist4(val) {
     });
 		valshist4 = valshist;
     d3.selectAll(".hist4").remove();
-    createhist4(histwidth, formatCount, valshist4, hd4);
+    if (brush.empty()) {
+      createhist4(histwidth, formatCount, valshist4, hd4);
+    } else {
+      // histogram data
+      svg.selectAll(".selected").classed("selected", function(d) {
+          selhist4.push(+d[hd4]);
+          return true;
+      });
+      createhist4(histwidth, formatCount, valshist4, hd4, selhist4);
+    }
   });
 }
 
@@ -379,7 +418,7 @@ if(selhist) {
 
 }
 
-function createhist2(histwidth, formatCount, valshist2, val) {
+function createhist2(histwidth, formatCount, valshist2, val, selhist) {
   var tickshist2 = 10;
 
   var x2 = d3.scale.linear()
@@ -425,6 +464,24 @@ function createhist2(histwidth, formatCount, valshist2, val) {
       .attr("text-anchor", "middle")
       .text(function(d) {  var c = formatCount(d.y); if((d.y) > 15){ return c; };  });
 
+
+if(selhist) {
+  var seldata = d3.layout.histogram()
+      .bins(x2.ticks(tickshist2))
+      (selhist);
+  var selbar = hist2.selectAll(".bar2")
+      .data(seldata)
+    .enter().append("g")
+      .attr("class", "hist1 bar2 tester")
+      .attr("transform", function(d) { return "translate(" + x2(d.x) + "," + y2(d.y) + ")"; });
+      selbar.append("rect")
+          .attr("x", 1)
+          .attr("width", exactwidth2)
+          .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y2(d.y); });
+
+
+}
+
       val = val.split("_");
 
         hist2.append("g")
@@ -452,7 +509,7 @@ function createhist2(histwidth, formatCount, valshist2, val) {
       .text("Number of Galaxies");
 }
 
-function createhist3(histwidth, formatCount, valshist3, val) {
+function createhist3(histwidth, formatCount, valshist3, val, selhist) {
 
   var tickshist3 = 10;
 
@@ -498,6 +555,23 @@ function createhist3(histwidth, formatCount, valshist3, val) {
           .attr("text-anchor", "middle")
           .text(function(d) {  var c = formatCount(d.y); if((d.y) > 15){ return c; };  });
 
+if(selhist) {
+  var seldata = d3.layout.histogram()
+      .bins(x3.ticks(tickshist3))
+      (selhist);
+  var selbar = hist3.selectAll(".bar2")
+      .data(seldata)
+    .enter().append("g")
+      .attr("class", "hist3 bar2 tester")
+      .attr("transform", function(d) { return "translate(" + x3(d.x) + "," + y3(d.y) + ")"; });
+      selbar.append("rect")
+          .attr("x", 1)
+          .attr("width", exactwidth3)
+          .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y3(d.y); });
+
+
+}
+
           val = val.split("_");
 
       hist3.append("g")
@@ -525,7 +599,7 @@ function createhist3(histwidth, formatCount, valshist3, val) {
           .text("Number of Galaxies");
 }
 
-function createhist4(histwidth, formatCount, valshist4, val){
+function createhist4(histwidth, formatCount, valshist4, val, selhist){
 
   var tickshist4 = 14;
 
@@ -571,6 +645,24 @@ function createhist4(histwidth, formatCount, valshist4, val){
         .attr("text-anchor", "middle")
         .text(function(d) {  var c = formatCount(d.y); if((d.y) > 15){ return c; };  });
 
+
+if(selhist) {
+  var seldata = d3.layout.histogram()
+      .bins(x4.ticks(tickshist4))
+      (selhist);
+  var selbar = hist4.selectAll(".bar2")
+      .data(seldata)
+    .enter().append("g")
+      .attr("class", "hist4 bar2 tester")
+      .attr("transform", function(d) { return "translate(" + x4(d.x) + "," + y4(d.y) + ")"; });
+      selbar.append("rect")
+          .attr("x", 1)
+          .attr("width", exactwidth4)
+          .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y4(d.y); });
+
+
+}
+
         val = val.split("_");
 
     hist4.append("g")
@@ -605,18 +697,54 @@ var xvar = "sSFR", yvar = "q";
 //scatterplot
 function updateScatterX(val) {
   xvar = val;
+
   d3.csv("data/data_good_small.csv", function(error, data) {
     d3.selectAll(".scatter").remove();
     createscatter(data, xvar, yvar);
   });
+
+    // clear brush and redraw histograms
+  if (!brush.empty()) {
+    d3.selectAll(".hist1").remove();
+    d3.selectAll(".hist2").remove();
+    d3.selectAll(".hist3").remove();
+    d3.selectAll(".hist4").remove();
+    selhist1 = [];
+    selhist2 = [];
+    selhist3 = [];
+    selhist4 = [];
+    d3.selectAll(".brush").call(brush.clear());
+    createhist1(histwidth, formatCount, valshist1, hd1);
+    createhist2(histwidth, formatCount, valshist2, hd2);
+    createhist3(histwidth, formatCount, valshist3, hd3);
+    createhist4(histwidth, formatCount, valshist4, hd4);
+  }
 }
 
 function updateScatterY(val) {
   yvar = val;
+
   d3.csv("data/data_good_small.csv", function(error, data) {
     d3.selectAll(".scatter").remove();
     createscatter(data, xvar, yvar);
   });
+
+  // clear brush and redraw histograms
+  if (!brush.empty()) {
+    d3.selectAll(".hist1").remove();
+    d3.selectAll(".hist2").remove();
+    d3.selectAll(".hist3").remove();
+    d3.selectAll(".hist4").remove();
+    selhist1 = [];
+    selhist2 = [];
+    selhist3 = [];
+    selhist4 = [];
+    d3.selectAll(".brush").call(brush.clear());
+    createhist1(histwidth, formatCount, valshist1, hd1);
+    createhist2(histwidth, formatCount, valshist2, hd2);
+    createhist3(histwidth, formatCount, valshist3, hd3);
+    createhist4(histwidth, formatCount, valshist4, hd4);
+  }
 }
 
 
@@ -694,7 +822,7 @@ function createscatter(data, xvar, yvar) {
       })
       .on("mouseout", function(d) {
         if (d3.select(this).classed("selected")) {
-          d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
+          d3.select(this).attr("r", 3.5 ).style("fill", "#ffa500");
         }
         else {
           d3.select(this).attr("r", 3.5 ).style("fill", "#333");
@@ -732,7 +860,7 @@ function brushmove(p) {
 
     if (isSelected) {
       // change to orange
-      d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
+      d3.select(this).attr("r", 3.5 ).style("fill", "#ffa500");
     } else {
       // keep black
       d3.select(this).attr("r", 3.5 ).style("fill", "#333");
@@ -744,32 +872,46 @@ function brushmove(p) {
   // histogram bars
 }
 
+var selhist1;
+var selhist2;
+var selhist3;
+var selhist4;
+
 function brushend(p) {
+  selhist1 = [];
+  selhist2 = [];
+  selhist3 = [];
+  selhist4 = [];
+
+  d3.selectAll(".hist1").remove();
+  d3.selectAll(".hist2").remove();
+  d3.selectAll(".hist3").remove();
+  d3.selectAll(".hist4").remove();
 
 	if (brush.empty()) {
 		svg.selectAll(".selected").classed("selected", false);
+
+    createhist1(histwidth, formatCount, valshist1, hd1);
+    createhist2(histwidth, formatCount, valshist2, hd2);
+    createhist3(histwidth, formatCount, valshist3, hd3);
+    createhist4(histwidth, formatCount, valshist4, hd4);
 		return true;
-}
+  }
 
 	// histogram data
-	var selhist1 = [];
-	var selhist2 = [];
-	var selhist3 = [];
-	var selhist4 = [];
-	var e = brush.extent();
-	svg.selectAll("circle").classed("selected", function(d) {
-    var isSelected = e[0][0] < xValue(d) && xValue(d) < e[1][0]
-            && e[0][1] < yValue(d) && yValue(d) < e[1][1];
-	if (isSelected) {
-		// change to orange
-		d3.select(this).attr("r", 4 ).style("fill", "#ffa500");
-		selhist1.push(+d[hd1]);
+	svg.selectAll(".selected").classed("selected", function(d) {
+
+ 	  selhist1.push(+d[hd1]);
 		selhist2.push(+d[hd2]);
 		selhist3.push(+d[hd3]);
 		selhist4.push(+d[hd4]);
-	}
-});
-createhist1(histwidth, formatCount, valshist1, hd1, selhist1);
+
+    return true;
+  });
+  createhist1(histwidth, formatCount, valshist1, hd1, selhist1);
+  createhist2(histwidth, formatCount, valshist2, hd2, selhist2);
+  createhist3(histwidth, formatCount, valshist3, hd3, selhist3);
+  createhist4(histwidth, formatCount, valshist4, hd4, selhist4);
 
 }
 
