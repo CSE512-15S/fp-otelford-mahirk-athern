@@ -242,15 +242,16 @@ function updateHist1(val) {
 		valshist1 = valshist;
     d3.selectAll(".hist1").remove();
     
+    var selhist = [];
     if (brush.empty()) {
       createhist1(histwidth, formatCount, valshist1, hd1);
     } else {
       // histogram data
       svg.selectAll(".selected").classed("selected", function(d) {
-          selhist4.push(+d[hd1]);
+          selhist.push(+d[hd1]);
           return true;
       });
-      createhist1(histwidth, formatCount, valshist1, hd1, selhist1);
+      createhist1(histwidth, formatCount, valshist1, hd1, selhist);
     }
   });
 }
@@ -265,15 +266,16 @@ function updateHist2(val) {
 		valshist2 = valshist;
     d3.selectAll(".hist2").remove();
     
+    var selhist = [];
     if (brush.empty()) {
       createhist2(histwidth, formatCount, valshist2, hd2);
     } else {
       // histogram data
       svg.selectAll(".selected").classed("selected", function(d) {
-          selhist2.push(+d[hd2]);
+          selhist.push(+d[hd2]);
           return true;
       });
-      createhist2(histwidth, formatCount, valshist2, hd2, selhist2);
+      createhist2(histwidth, formatCount, valshist2, hd2, selhist);
     }
   });
 }
@@ -288,15 +290,16 @@ function updateHist3(val) {
 		valshist3 = valshist;
     d3.selectAll(".hist3").remove();
 
+    var selhist = [];
     if (brush.empty()) {
       createhist3(histwidth, formatCount, valshist3, hd3);
     } else {
       // histogram data
       svg.selectAll(".selected").classed("selected", function(d) {
-          selhist3.push(+d[hd3]);
+          selhist.push(+d[hd3]);
           return true;
       });
-      createhist3(histwidth, formatCount, valshist3, hd3, selhist3);
+      createhist3(histwidth, formatCount, valshist3, hd3, selhist);
     }
   });
 }
@@ -311,15 +314,17 @@ function updateHist4(val) {
     });
 		valshist4 = valshist;
     d3.selectAll(".hist4").remove();
+
+    var selhist = [];
     if (brush.empty()) {
       createhist4(histwidth, formatCount, valshist4, hd4);
     } else {
       // histogram data
       svg.selectAll(".selected").classed("selected", function(d) {
-          selhist4.push(+d[hd4]);
+          selhist.push(+d[hd4]);
           return true;
       });
-      createhist4(histwidth, formatCount, valshist4, hd4, selhist4);
+      createhist4(histwidth, formatCount, valshist4, hd4, selhist);
     }
   });
 }
@@ -472,7 +477,7 @@ if(selhist) {
   var selbar = hist2.selectAll(".bar2")
       .data(seldata)
     .enter().append("g")
-      .attr("class", "hist1 bar2 tester")
+      .attr("class", "hist2 bar2 tester")
       .attr("transform", function(d) { return "translate(" + x2(d.x) + "," + y2(d.y) + ")"; });
       selbar.append("rect")
           .attr("x", 1)
@@ -709,10 +714,6 @@ function updateScatterX(val) {
     d3.selectAll(".hist2").remove();
     d3.selectAll(".hist3").remove();
     d3.selectAll(".hist4").remove();
-    selhist1 = [];
-    selhist2 = [];
-    selhist3 = [];
-    selhist4 = [];
     d3.selectAll(".brush").call(brush.clear());
     createhist1(histwidth, formatCount, valshist1, hd1);
     createhist2(histwidth, formatCount, valshist2, hd2);
@@ -735,10 +736,6 @@ function updateScatterY(val) {
     d3.selectAll(".hist2").remove();
     d3.selectAll(".hist3").remove();
     d3.selectAll(".hist4").remove();
-    selhist1 = [];
-    selhist2 = [];
-    selhist3 = [];
-    selhist4 = [];
     d3.selectAll(".brush").call(brush.clear());
     createhist1(histwidth, formatCount, valshist1, hd1);
     createhist2(histwidth, formatCount, valshist2, hd2);
@@ -872,17 +869,7 @@ function brushmove(p) {
   // histogram bars
 }
 
-var selhist1;
-var selhist2;
-var selhist3;
-var selhist4;
-
 function brushend(p) {
-  selhist1 = [];
-  selhist2 = [];
-  selhist3 = [];
-  selhist4 = [];
-
   d3.selectAll(".hist1").remove();
   d3.selectAll(".hist2").remove();
   d3.selectAll(".hist3").remove();
@@ -897,6 +884,11 @@ function brushend(p) {
     createhist4(histwidth, formatCount, valshist4, hd4);
 		return true;
   }
+
+  var selhist1 = [];
+  var selhist2 = [];
+  var selhist3 = [];
+  var selhist4 = [];
 
 	// histogram data
 	svg.selectAll(".selected").classed("selected", function(d) {
