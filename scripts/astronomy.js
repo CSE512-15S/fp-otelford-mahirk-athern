@@ -7,21 +7,26 @@ var valshist2 = [];
 var valshist3 = [];
 var valshist4 = [];
 
+var head = d3.select("body").append("h1").attr("class", "head").html("Galaxy Explorer");
+
+var credits = d3.select("body").append("p").attr("class", "credits").html("Made by Nicole Atherly, Mahir Kothary, and Grace Telford");
+
+var instructions = d3.select("body").append("p").attr("class", "instructions").html("An interactive tool for exploring correlations between galaxy properties derived from Sloan Digital Sky Survey spectra. Choose parameters to plot on the scatter plot and histograms. Select a region of interest in the scatter plot, then scroll down to see how the distributions for the full dataset and your selected sample compare.");
 
 var maindiv = d3.select("body").append("div").attr("id", "maindiv");
-maindiv.append("div").attr("class","mainselect").html('<b>Select Your Axis Variables:</b> <br/><select id="xvar",\
-		onchange="updateScatterX(this.value);">\
+maindiv.append("div").attr("class","mainselect").html('<b>Select Your Axis Variables:</b> <br/><select id="yvar",\
+		onchange="updateScatterY(this.value);">\
 		<option value="z" >Redshift</option>\
   		<option value="mass">Stellar Mass</option>\
   		<option value="mass_err">Mass Uncertainty</option>\
   		<option value="SFR">Star Formation Rate</option>\
-  		<option value="sSFR" selected="selected">Specific Star Formation Rate</option>\
+  		<option value="sSFR">Specific Star Formation Rate</option>\
   		<option value="Z_Mannucci">Metallicity (M10)</option>\
   		<option value="Z_Dopita">Metallicity (D13)</option>\
   		<option value="deltaZ">Metallicity Difference (D13-M10)</option>\
   		<option value="Z_R23">Metallicity (R23)</option>\
   		<option value="Z_NHa">Metallicity (N/Halpha)</option>\
-  		<option value="q">Ionization Parameter</option>\
+  		<option value="q" selected="selected">Ionization Parameter</option>\
 		<option value="surf_bright">Surface Brightness</option>\
   		<option value="HaHb">Balmer Decrement</option>\
   		<option value="bdec_frac_err">Balmer Decrement Fractional Error</option>\
@@ -36,33 +41,33 @@ maindiv.append("div").attr("class","mainselect").html('<b>Select Your Axis Varia
   		<option value="D4000">D4000</option>\
   		<option value="vdisp">Velocity Dispersion</option>\
   		<option value="A_v">Extinction in V-band</option>\
-	    </select><br> <b> v/s </b> <br/> <select id="yvar",\
-      		onchange="updateScatterY(this.value);">\
+	    </select><br> <b> vs. </b> <br/> <select id="xvar",\
+      		onchange="updateScatterX(this.value);">\
       		<option value="z" >Redshift</option>\
-        		<option value="mass">Stellar Mass</option>\
-        		<option value="mass_err">Mass Uncertainty</option>\
-        		<option value="SFR">Star Formation Rate</option>\
-        		<option value="sSFR">Specific Star Formation Rate</option>\
-        		<option value="Z_Mannucci">Metallicity (M10)</option>\
-        		<option value="Z_Dopita">Metallicity (D13)</option>\
-        		<option value="deltaZ">Metallicity Difference (D13-M10)</option>\
-        		<option value="Z_R23">Metallicity (R23)</option>\
-        		<option value="Z_NHa">Metallicity (N/Halpha)</option>\
-        		<option value="q" selected="selected">Ionization Parameter</option>\
+        	<option value="mass">Stellar Mass</option>\
+        	<option value="mass_err">Mass Uncertainty</option>\
+        	<option value="SFR">Star Formation Rate</option>\
+        	<option value="sSFR" selected="selected">Specific Star Formation Rate</option>\
+        	<option value="Z_Mannucci">Metallicity (M10)</option>\
+        	<option value="Z_Dopita">Metallicity (D13)</option>\
+        	<option value="deltaZ">Metallicity Difference (D13-M10)</option>\
+        	<option value="Z_R23">Metallicity (R23)</option>\
+        	<option value="Z_NHa">Metallicity (N/Halpha)</option>\
+        	<option value="q">Ionization Parameter</option>\
       		<option value="surf_bright">Surface Brightness</option>\
-        		<option value="HaHb">Balmer Decrement</option>\
-        		<option value="bdec_frac_err">Balmer Decrement Fractional Error</option>\
-        		<option value="logR23">R23</option>\
-        		<option value="logNHa">N/Halpha</option>\
-        		<option value="OIII/OII">OIII/OII</option>\
-        		<option value="NII/OII">NII/OII</option>\
-        		<option value="OIII/SII">OIII/SII</option>\
-        		<option value="NII/SII">NII/SII</option>\
-        		<option value="Hbeta_ratio">Hbeta Absorption/Emission</option>\
-        		<option value="Hdelta_eqw">Hdelta Equivalent Width</option>\
-        		<option value="D4000">D4000</option>\
-        		<option value="vdisp">Velocity Dispersion</option>\
-        		<option value="A_v">Extinction in V-band</option>\
+        	<option value="HaHb">Balmer Decrement</option>\
+        	<option value="bdec_frac_err">Balmer Decrement Fractional Error</option>\
+        	<option value="logR23">R23</option>\
+        	<option value="logNHa">N/Halpha</option>\
+        	<option value="OIII/OII">OIII/OII</option>\
+        	<option value="NII/OII">NII/OII</option>\
+        	<option value="OIII/SII">OIII/SII</option>\
+        	<option value="NII/SII">NII/SII</option>\
+        	<option value="Hbeta_ratio">Hbeta Absorption/Emission</option>\
+        	<option value="Hdelta_eqw">Hdelta Equivalent Width</option>\
+        	<option value="D4000">D4000</option>\
+        	<option value="vdisp">Velocity Dispersion</option>\
+        	<option value="A_v">Extinction in V-band</option>\
       	    </select>');
 var svg = maindiv.append('svg')
     .attr('class', 'chart')
@@ -761,8 +766,8 @@ function createscatter(data, xvar, yvar) {
      yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 
-       xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
-      yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+     xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+     yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
 
   svg.append("g")
       .attr("class", "x axis scatter")
@@ -893,7 +898,7 @@ function brushend(p) {
 	// histogram data
 	svg.selectAll(".selected").classed("selected", function(d) {
 
- 	  selhist1.push(+d[hd1]);
+ 		selhist1.push(+d[hd1]);
 		selhist2.push(+d[hd2]);
 		selhist3.push(+d[hd3]);
 		selhist4.push(+d[hd4]);
