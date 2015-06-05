@@ -27,6 +27,11 @@ body {
   shape-rendering: crispEdges;
 }
 
+.bar2 rect {
+  fill: #ffa500;
+  shape-rendering: crispEdges;
+}
+
 .axis path,
 .axis line {
   fill: none;
