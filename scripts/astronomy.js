@@ -2,6 +2,9 @@ var margin = {top: 40, right: 40, bottom: 40, left:100},
 width = $(window).width() - margin.left - margin.right,
 height = $(window).height() - margin.top - margin.bottom- 100,
 columns = ["z", "mass", "mass_err", "SFR", "sSFR", "Z_Mannucci", "Z_Dopita", "deltaZ", "Z_R23", "Z_NHa", "q", "surf_bright", "HaHb", "bdec_frac_err", "logR23", "logNHa", "OIII/OII", "NII/OII", "OIII/SII", "NII/SII", "Hbeta_ratio", "Hdelta_eqw", "D4000", "vdisp", "A_v"];
+
+var names = {"z":"Redshift", "mass":"Stellar Mass", "mass_err":"Mass Uncertainty", "SFR":"Star Formation Rate", "sSFR":"Specific Star Formation Rate", "Z_Mannucci":"Metallicity (M10)", "Z_Dopita":"Metallicity (D13)", "deltaZ":"Metallicity Difference (D13-M10)", "Z_R23":"Metallicity (R23)", "Z_NHa":"Metallicity (N/Halpha)", "q":"Ionization Parameter", "surf_bright":"Surface Brightness", "HaHb":"Balmer Decrement", "bdec_frac_err":"Balmer Decrement Fractional Error", "logR23":"R23", "logNHa":"N/Halpha", "OIII/OII":"OIII/OII", "NII/OII":"NII/OII", "OIII/SII":"OIII/SII", "NII/SII":"NII/SII", "Hbeta_ratio":"Hbeta Absorption/Emission", "Hdelta_eqw":"Hdelta Equivalent Width", "D4000":"D4000", "vdisp":"Velocity Dispersion", "A_v":"Extinction in V-band"};
+
 var valshist1 = [];
 var valshist2 = [];
 var valshist3 = [];
@@ -337,7 +340,7 @@ function updateHist4(val) {
 
 
 function createhist1(histwidth, formatCount, valshist1, val, selhist) {
-  var tickshist1 = 12;
+  var tickshist1 = 10;
   var x = d3.scale.linear()
       .domain([Math.floor(d3.min(valshist1)), Math.ceil(d3.max(valshist1))])
       .range([0, histwidth]);
@@ -400,7 +403,7 @@ if(selhist) {
 
 // Axis
 
-	val = val.split("_");
+	//val = val.split("_");
 
   hist1.append("g")
       .attr("class", "x axis hist1")
@@ -411,10 +414,11 @@ if(selhist) {
         .attr("dx", width/2-margin.left)
         .attr("dy", "3em")
         .style("text-anchor", "end")
-        .text(val[0])
-        .append("tspan")
-        .attr("baseline-shift", "sub")
-        .text(function() {if(val[1]){return val[1];}});
+        //.text(val[0])
+	.text(names[val])
+        //.append("tspan")
+        //.attr("baseline-shift", "sub")
+        //.text(function() {if(val[1]){return val[1];}});
 
   hist1.append("g")
       .attr("class", "y axis hist1")
@@ -492,7 +496,7 @@ if(selhist) {
 
 }
 
-      val = val.split("_");
+      //val = val.split("_");
 
         hist2.append("g")
             .attr("class", "x axis hist2")
@@ -503,10 +507,11 @@ if(selhist) {
               .attr("dx", width/2-margin.left)
               .attr("dy", "3em")
               .style("text-anchor", "end")
-              .text(val[0])
-              .append("tspan")
-              .attr("baseline-shift", "sub")
-              .text(function() {if(val[1]){return val[1];}});
+              //.text(val[0])
+    	      .text(names[val])
+              //.append("tspan")
+              //.attr("baseline-shift", "sub")
+              //.text(function() {if(val[1]){return val[1];}});
 
   hist2.append("g")
       .attr("class", "y axis hist2")
@@ -582,7 +587,7 @@ if(selhist) {
 
 }
 
-          val = val.split("_");
+          //val = val.split("_");
 
       hist3.append("g")
           .attr("class", " hist3 x axis")
@@ -593,10 +598,11 @@ if(selhist) {
             .attr("dx", width/2-margin.left)
             .attr("dy", "3em")
             .style("text-anchor", "end")
-            .text(val[0])
-            .append("tspan")
-            .attr("baseline-shift", "sub")
-            .text(function() {if(val[1]){return val[1];}});
+              //.text(val[0])
+    	      .text(names[val])
+              //.append("tspan")
+              //.attr("baseline-shift", "sub")
+              //.text(function() {if(val[1]){return val[1];}});
 
       hist3.append("g")
           .attr("class", "hist3 y axis")
@@ -611,7 +617,7 @@ if(selhist) {
 
 function createhist4(histwidth, formatCount, valshist4, val, selhist){
 
-  var tickshist4 = 14;
+  var tickshist4 = 10;
 
     var x4 = d3.scale.linear()
         .domain([Math.floor(d3.min(valshist4))-1, Math.ceil(d3.max(valshist4))+1])
@@ -673,7 +679,7 @@ if(selhist) {
 
 }
 
-        val = val.split("_");
+        //val = val.split("_");
 
     hist4.append("g")
         .attr("class", "x axis hist4")
@@ -684,10 +690,11 @@ if(selhist) {
           .attr("dx", width/2-margin.left)
           .attr("dy", "3em")
           .style("text-anchor", "end")
-          .text(val[0])
-          .append("tspan")
-          .attr("baseline-shift", "sub")
-          .text(function() {if(val[1]){return val[1];}});
+              //.text(val[0])
+    	      .text(names[val])
+              //.append("tspan")
+              //.attr("baseline-shift", "sub")
+              //.text(function() {if(val[1]){return val[1];}});
 
     hist4.append("g")
         .attr("class", "y axis hist4")
@@ -778,7 +785,7 @@ function createscatter(data, xvar, yvar) {
       .attr("dx", 2*width/3-margin.left)
       .attr("dy", "3em")
       .style("text-anchor", "end")
-      .text(xvar);
+      .text(names[xvar]);
 
   // y-axis
   svg.append("g")
@@ -790,7 +797,7 @@ function createscatter(data, xvar, yvar) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text(yvar);
+      .text(names[yvar]);
 
   // Brush and Linking
   brush = d3.svg.brush()
@@ -814,7 +821,7 @@ function createscatter(data, xvar, yvar) {
         .attr("cy", yMap)
         .style("fill", "#333")
         .on("mouseover", function(d) {
-          d3.select(this).attr("r", 4 ).style("fill", "#79B441");
+          d3.select(this).attr("r", 4 ).style("fill", "#4682b4");
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
