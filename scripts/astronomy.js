@@ -342,12 +342,17 @@ function updateHist4(val) {
 function createhist1(histwidth, formatCount, valshist1, val, selhist) {
   var tickshist1 = 10;
   var x = d3.scale.linear()
-      .domain([Math.floor(d3.min(valshist1)), Math.ceil(d3.max(valshist1))])
+      //.domain([Math.floor(d3.min(valshist1))-0.2, Math.ceil(d3.max(valshist1))+0.2])
+      .domain([d3.min(valshist1), d3.max(valshist1)])
       .range([0, histwidth]);
+
+tempScale = d3.scale.linear().domain([0, tickshist1]).range([d3.min(valshist1), d3.max(valshist1)]);
+tickArray = d3.range(tickshist1+1).map(tempScale);
 
   // Generate a histogram using twenty uniformly-spaced bins.
   var bardata = d3.layout.histogram()
-      .bins(x.ticks(tickshist1))
+      //.bins(x.ticks(tickshist1))
+	.bins(tickArray)
       (valshist1);
 
 
@@ -355,8 +360,11 @@ function createhist1(histwidth, formatCount, valshist1, val, selhist) {
       .domain([0, d3.max(bardata, function(d) { return d.y; })])
       .range([height/2 - margin.top - margin.bottom, 0]);
 
+// shift 
+
   var histx = d3.svg.axis()
       .scale(x)
+      .tickValues(tickArray)
       .orient("bottom");
 
  var histy = d3.svg.axis()
@@ -369,7 +377,8 @@ function createhist1(histwidth, formatCount, valshist1, val, selhist) {
       .attr("class", "hist1 bar")
       .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
-  var exactwidth = (((histwidth)/x.ticks(tickshist1).length) - 1)
+  //var exactwidth = (((histwidth)/x.ticks(tickshist1).length) - 1)
+  var exactwidth = (((histwidth)/tickArray.length) - 1)
 
   bar.append("rect")
       .attr("x", 1)
@@ -386,7 +395,8 @@ function createhist1(histwidth, formatCount, valshist1, val, selhist) {
 
 if(selhist) {
 	var seldata = d3.layout.histogram()
-			.bins(x.ticks(tickshist1))
+			//.bins(x.ticks(tickshist1))
+			.bins(tickArray)
 			(selhist);
 	var selbar = hist1.selectAll(".bar2")
 	    .data(seldata)
@@ -403,8 +413,6 @@ if(selhist) {
 
 // Axis
 
-	//val = val.split("_");
-
   hist1.append("g")
       .attr("class", "x axis hist1")
       .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
@@ -414,21 +422,18 @@ if(selhist) {
         .attr("dx", width/2-margin.left)
         .attr("dy", "3em")
         .style("text-anchor", "end")
-        //.text(val[0])
 	.text(names[val])
-        //.append("tspan")
-        //.attr("baseline-shift", "sub")
-        //.text(function() {if(val[1]){return val[1];}});
 
   hist1.append("g")
       .attr("class", "y axis hist1")
       .call(histy)
       .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
+      .attr("y", -70)
       .attr("dy", ".7em")
       .style("text-anchor", "end")
       .text("Number of Galaxies");
+
 
 }
 
@@ -436,12 +441,17 @@ function createhist2(histwidth, formatCount, valshist2, val, selhist) {
   var tickshist2 = 10;
 
   var x2 = d3.scale.linear()
-      .domain([Math.floor(d3.min(valshist2))-1, Math.ceil(d3.max(valshist2))+1])
+      //.domain([Math.floor(d3.min(valshist2))-0.2, Math.ceil(d3.max(valshist2))])
+      .domain([d3.min(valshist2), d3.max(valshist2)])
       .range([0, histwidth]);
+
+tempScale = d3.scale.linear().domain([0, tickshist2]).range([d3.min(valshist2), d3.max(valshist2)]);
+tickArray = d3.range(tickshist2+1).map(tempScale);
 
   // Generate a histogram using twenty uniformly-spaced bins.
   var bardata2 = d3.layout.histogram()
-      .bins(x2.ticks(tickshist2))
+      //.bins(x2.ticks(tickshist2))
+	.bins(tickArray)
       (valshist2);
 
   var y2 = d3.scale.linear()
@@ -450,6 +460,7 @@ function createhist2(histwidth, formatCount, valshist2, val, selhist) {
 
   var hist2x = d3.svg.axis()
       .scale(x2)
+      .tickValues(tickArray)
       .orient("bottom");
 
   var hist2y = d3.svg.axis()
@@ -463,7 +474,9 @@ function createhist2(histwidth, formatCount, valshist2, val, selhist) {
       .attr("transform", function(d) { return "translate(" + x2(d.x) + "," + y2(d.y) + ")"; });
 
 
-  var exactwidth2 = (((histwidth)/x2.ticks(tickshist2).length) - 1)
+  //var exactwidth2 = (((histwidth)/x2.ticks(tickshist2).length) - 1)
+  var exactwidth2 = (((histwidth)/tickArray.length) - 1)
+
 
   bar2.append("rect")
       .attr("x", 1)
@@ -481,7 +494,8 @@ function createhist2(histwidth, formatCount, valshist2, val, selhist) {
 
 if(selhist) {
   var seldata = d3.layout.histogram()
-      .bins(x2.ticks(tickshist2))
+      //.bins(x2.ticks(tickshist2))
+        .bins(tickArray)
       (selhist);
   var selbar = hist2.selectAll(".bar2")
       .data(seldata)
@@ -496,8 +510,6 @@ if(selhist) {
 
 }
 
-      //val = val.split("_");
-
         hist2.append("g")
             .attr("class", "x axis hist2")
             .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
@@ -507,18 +519,14 @@ if(selhist) {
               .attr("dx", width/2-margin.left)
               .attr("dy", "3em")
               .style("text-anchor", "end")
-              //.text(val[0])
     	      .text(names[val])
-              //.append("tspan")
-              //.attr("baseline-shift", "sub")
-              //.text(function() {if(val[1]){return val[1];}});
 
   hist2.append("g")
       .attr("class", "y axis hist2")
       .call(hist2y)
       .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
+      .attr("y", -70)
       .attr("dy", ".7em")
       .style("text-anchor", "end")
       .text("Number of Galaxies");
@@ -529,12 +537,17 @@ function createhist3(histwidth, formatCount, valshist3, val, selhist) {
   var tickshist3 = 10;
 
       var x3 = d3.scale.linear()
-          .domain([Math.floor(d3.min(valshist3))-1, Math.ceil(d3.max(valshist3))+1])
-          .range([0, histwidth]);
+          //.domain([Math.floor(d3.min(valshist3))-0.2, Math.ceil(d3.max(valshist3))])
+        .domain([d3.min(valshist3), d3.max(valshist3)])
+        .range([0, histwidth]);
+
+tempScale = d3.scale.linear().domain([0, tickshist3]).range([d3.min(valshist3), d3.max(valshist3)]);
+tickArray = d3.range(tickshist3+1).map(tempScale);
 
       // Generate a histogram using twenty uniformly-spaced bins.
       var bardata3 = d3.layout.histogram()
-          .bins(x3.ticks(tickshist3))
+          //.bins(x3.ticks(tickshist3))
+	  .bins(tickArray)
           (valshist3);
 
       var y3 = d3.scale.linear()
@@ -543,6 +556,7 @@ function createhist3(histwidth, formatCount, valshist3, val, selhist) {
 
       var hist3x = d3.svg.axis()
           .scale(x3)
+          .tickValues(tickArray)
           .orient("bottom");
 
       var hist3y = d3.svg.axis()
@@ -556,7 +570,9 @@ function createhist3(histwidth, formatCount, valshist3, val, selhist) {
           .attr("transform", function(d) { return "translate(" + x3(d.x) + "," + y3(d.y) + ")"; });
 
 
-      var exactwidth3 = (((histwidth)/x3.ticks(tickshist3).length) - 1);
+      //var exactwidth3 = (((histwidth)/x3.ticks(tickshist3).length) - 1);
+      var exactwidth3 = (((histwidth)/tickArray.length) - 1)
+
       bar3.append("rect")
           .attr("x", 1)
           .attr("width", exactwidth3)
@@ -572,7 +588,8 @@ function createhist3(histwidth, formatCount, valshist3, val, selhist) {
 
 if(selhist) {
   var seldata = d3.layout.histogram()
-      .bins(x3.ticks(tickshist3))
+      //.bins(x3.ticks(tickshist3))
+        .bins(tickArray)
       (selhist);
   var selbar = hist3.selectAll(".bar2")
       .data(seldata)
@@ -587,8 +604,6 @@ if(selhist) {
 
 }
 
-          //val = val.split("_");
-
       hist3.append("g")
           .attr("class", " hist3 x axis")
           .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
@@ -598,21 +613,17 @@ if(selhist) {
             .attr("dx", width/2-margin.left)
             .attr("dy", "3em")
             .style("text-anchor", "end")
-              //.text(val[0])
     	      .text(names[val])
-              //.append("tspan")
-              //.attr("baseline-shift", "sub")
-              //.text(function() {if(val[1]){return val[1];}});
 
-      hist3.append("g")
-          .attr("class", "hist3 y axis")
-          .call(hist3y)
-          .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".7em")
-          .style("text-anchor", "end")
-          .text("Number of Galaxies");
+  hist3.append("g")
+      .attr("class", "y axis hist3")
+      .call(hist3y)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -70)
+      .attr("dy", ".7em")
+      .style("text-anchor", "end")
+      .text("Number of Galaxies");
 }
 
 function createhist4(histwidth, formatCount, valshist4, val, selhist){
@@ -620,12 +631,18 @@ function createhist4(histwidth, formatCount, valshist4, val, selhist){
   var tickshist4 = 10;
 
     var x4 = d3.scale.linear()
-        .domain([Math.floor(d3.min(valshist4))-1, Math.ceil(d3.max(valshist4))+1])
+        //.domain([Math.floor(d3.min(valshist4))-0.2, Math.ceil(d3.max(valshist4))])
+        .domain([d3.min(valshist4), d3.max(valshist4)])
         .range([0, histwidth]);
+
+tempScale = d3.scale.linear().domain([0, tickshist4]).range([d3.min(valshist4), d3.max(valshist4)]);
+tickArray = d3.range(tickshist4+1).map(tempScale);
+
 
     // Generate a histogram using twenty uniformly-spaced bins.
     var bardata4 = d3.layout.histogram()
-        .bins(x4.ticks(tickshist4))
+        //.bins(x4.ticks(tickshist4))
+	  .bins(tickArray)
         (valshist4);
 
     var y4 = d3.scale.linear()
@@ -634,6 +651,7 @@ function createhist4(histwidth, formatCount, valshist4, val, selhist){
 
     var hist4x = d3.svg.axis()
         .scale(x4)
+        .tickValues(tickArray)
         .orient("bottom");
 
     var hist4y = d3.svg.axis()
@@ -647,7 +665,9 @@ function createhist4(histwidth, formatCount, valshist4, val, selhist){
         .attr("transform", function(d) { return "translate(" + x4(d.x) + "," + y4(d.y) + ")"; });
 
 
-    var exactwidth4 = (((histwidth)/x4.ticks(tickshist4).length) - 1);
+    //var exactwidth4 = (((histwidth)/x4.ticks(tickshist4).length) - 1);
+      var exactwidth4 = (((histwidth)/tickArray.length) - 1)
+
     bar4.append("rect")
         .attr("x", 1)
         .attr("width", exactwidth4)
@@ -664,7 +684,8 @@ function createhist4(histwidth, formatCount, valshist4, val, selhist){
 
 if(selhist) {
   var seldata = d3.layout.histogram()
-      .bins(x4.ticks(tickshist4))
+      //.bins(x4.ticks(tickshist4))
+        .bins(tickArray)
       (selhist);
   var selbar = hist4.selectAll(".bar2")
       .data(seldata)
@@ -679,8 +700,6 @@ if(selhist) {
 
 }
 
-        //val = val.split("_");
-
     hist4.append("g")
         .attr("class", "x axis hist4")
         .attr("transform", "translate(0," + (height/2 - margin.top - margin.bottom) + ")")
@@ -690,21 +709,17 @@ if(selhist) {
           .attr("dx", width/2-margin.left)
           .attr("dy", "3em")
           .style("text-anchor", "end")
-              //.text(val[0])
     	      .text(names[val])
-              //.append("tspan")
-              //.attr("baseline-shift", "sub")
-              //.text(function() {if(val[1]){return val[1];}});
 
-    hist4.append("g")
-        .attr("class", "y axis hist4")
-        .call(hist4y)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".7em")
-        .style("text-anchor", "end")
-        .text("Number of Galaxies");
+  hist4.append("g")
+      .attr("class", "y axis hist4")
+      .call(hist4y)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -70)
+      .attr("dy", ".7em")
+      .style("text-anchor", "end")
+      .text("Number of Galaxies");
 
 }
 
@@ -773,8 +788,8 @@ function createscatter(data, xvar, yvar) {
      yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 
-     xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
-     yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+     xScale.domain([d3.min(data, xValue)-0.2, d3.max(data, xValue)+0.2]);
+     yScale.domain([d3.min(data, yValue)-0.2, d3.max(data, yValue)+0.2]);
 
   svg.append("g")
       .attr("class", "x axis scatter")
@@ -794,7 +809,7 @@ function createscatter(data, xvar, yvar) {
     .append("text")
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
+      .attr("y", -70)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(names[yvar]);
