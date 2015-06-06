@@ -338,15 +338,33 @@ function updateHist4(val) {
 }
 
 
-
 function createhist1(histwidth, formatCount, valshist1, val, selhist) {
   var tickshist1 = 10;
+
+lowcut = d3.mean(valshist1) - 3 * d3.deviation(valshist1)
+highcut = d3.mean(valshist1) + 3 * d3.deviation(valshist1) 
+
+if (lowcut > d3.min(valshist1)) {
+    minimum = lowcut
+} else { 
+    minimum = d3.min(valshist1)
+}
+
+if (highcut < d3.max(valshist1)) {
+    maximum = highcut
+} else { 
+    maximum = d3.max(valshist1)
+}
+
   var x = d3.scale.linear()
       //.domain([Math.floor(d3.min(valshist1))-0.2, Math.ceil(d3.max(valshist1))+0.2])
-      .domain([d3.min(valshist1), d3.max(valshist1)])
+      //.domain([d3.min(valshist1), d3.max(valshist1)])
+      .domain([minimum, maximum])
       .range([0, histwidth]);
 
-tempScale = d3.scale.linear().domain([0, tickshist1]).range([d3.min(valshist1), d3.max(valshist1)]);
+//tempScale = d3.scale.linear().domain([0, tickshist1]).range([d3.min(valshist1), d3.max(valshist1)]);
+tempScale = d3.scale.linear().domain([0, tickshist1]).range([minimum, maximum]);
+
 tickArray = d3.range(tickshist1+1).map(tempScale);
 
   // Generate a histogram using twenty uniformly-spaced bins.
@@ -453,12 +471,31 @@ if(selhist) {
 function createhist2(histwidth, formatCount, valshist2, val, selhist) {
   var tickshist2 = 10;
 
+// clip outliers at 3 sigma
+
+lowcut = d3.mean(valshist2) - 3 * d3.deviation(valshist2)
+highcut = d3.mean(valshist2) + 3 * d3.deviation(valshist2) 
+
+if (lowcut > d3.min(valshist2)) {
+    minimum = lowcut
+} else { 
+    minimum = d3.min(valshist2)
+}
+
+if (highcut < d3.max(valshist2)) {
+    maximum = highcut
+} else { 
+    maximum = d3.max(valshist2)
+}
+
   var x2 = d3.scale.linear()
       //.domain([Math.floor(d3.min(valshist2))-0.2, Math.ceil(d3.max(valshist2))])
-      .domain([d3.min(valshist2), d3.max(valshist2)])
+      //.domain([d3.min(valshist2), d3.max(valshist2)])
+      .domain([minimum, maximum])
       .range([0, histwidth]);
 
-tempScale = d3.scale.linear().domain([0, tickshist2]).range([d3.min(valshist2), d3.max(valshist2)]);
+//tempScale = d3.scale.linear().domain([0, tickshist2]).range([d3.min(valshist2), d3.max(valshist2)]);
+tempScale = d3.scale.linear().domain([0, tickshist2]).range([minimum, maximum]);
 tickArray = d3.range(tickshist2+1).map(tempScale);
 
   // Generate a histogram using twenty uniformly-spaced bins.
@@ -562,12 +599,32 @@ function createhist3(histwidth, formatCount, valshist3, val, selhist) {
 
   var tickshist3 = 10;
 
+// clip outliers at 3 sigma
+
+lowcut = d3.mean(valshist3) - 3 * d3.deviation(valshist3)
+highcut = d3.mean(valshist3) + 3 * d3.deviation(valshist3) 
+
+if (lowcut > d3.min(valshist3)) {
+    minimum = lowcut
+} else { 
+    minimum = d3.min(valshist3)
+}
+
+if (highcut < d3.max(valshist3)) {
+    maximum = highcut
+} else { 
+    maximum = d3.max(valshist3)
+}
+
+
       var x3 = d3.scale.linear()
           //.domain([Math.floor(d3.min(valshist3))-0.2, Math.ceil(d3.max(valshist3))])
-        .domain([d3.min(valshist3), d3.max(valshist3)])
+        //.domain([d3.min(valshist3), d3.max(valshist3)])
+        .domain([minimum, maximum])
         .range([0, histwidth]);
 
-tempScale = d3.scale.linear().domain([0, tickshist3]).range([d3.min(valshist3), d3.max(valshist3)]);
+//tempScale = d3.scale.linear().domain([0, tickshist3]).range([d3.min(valshist3), d3.max(valshist3)]);
+tempScale = d3.scale.linear().domain([0, tickshist3]).range([minimum, maximum]);
 tickArray = d3.range(tickshist3+1).map(tempScale);
 
       // Generate a histogram using twenty uniformly-spaced bins.
@@ -669,12 +726,31 @@ function createhist4(histwidth, formatCount, valshist4, val, selhist){
 
   var tickshist4 = 10;
 
+// clip outliers at 3 sigma
+
+lowcut = d3.mean(valshist4) - 3 * d3.deviation(valshist4)
+highcut = d3.mean(valshist4) + 3 * d3.deviation(valshist4) 
+
+if (lowcut > d3.min(valshist4)) {
+    minimum = lowcut
+} else { 
+    minimum = d3.min(valshist4)
+}
+
+if (highcut < d3.max(valshist4)) {
+    maximum = highcut
+} else { 
+    maximum = d3.max(valshist4)
+}
+
     var x4 = d3.scale.linear()
         //.domain([Math.floor(d3.min(valshist4))-0.2, Math.ceil(d3.max(valshist4))])
-        .domain([d3.min(valshist4), d3.max(valshist4)])
+        //.domain([d3.min(valshist4), d3.max(valshist4)])
+        .domain([minimum, maximum])
         .range([0, histwidth]);
 
-tempScale = d3.scale.linear().domain([0, tickshist4]).range([d3.min(valshist4), d3.max(valshist4)]);
+//tempScale = d3.scale.linear().domain([0, tickshist4]).range([d3.min(valshist4), d3.max(valshist4)]);
+tempScale = d3.scale.linear().domain([0, tickshist4]).range([minimum, maximum]);
 tickArray = d3.range(tickshist4+1).map(tempScale);
 
 
