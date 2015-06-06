@@ -408,7 +408,6 @@ if(selhist) {
 		      .attr("width", exactwidth)
 		      .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y(d.y); })
           .on("mouseover", function(d) {
-            d3.select(this).style("fill", "#333");
             tooltip.transition()
                .duration(200)
                .style("opacity", .9);
@@ -417,7 +416,6 @@ if(selhist) {
                .style("top", (d3.event.pageY - 28) + "px");
           })
           .on("mouseout", function(d) {
-            d3.select(this).style("fill", "#ffa500");
             tooltip.transition()
                  .duration(500)
                  .style("opacity", 0);
@@ -522,7 +520,6 @@ if(selhist) {
           .attr("width", exactwidth2)
           .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y2(d.y); })
           .on("mouseover", function(d) {
-            d3.select(this).style("fill", "#333");
             tooltip.transition()
                .duration(200)
                .style("opacity", .9);
@@ -531,7 +528,6 @@ if(selhist) {
                .style("top", (d3.event.pageY - 28) + "px");
           })
           .on("mouseout", function(d) {
-            d3.select(this).style("fill", "#ffa500");
             tooltip.transition()
                  .duration(500)
                  .style("opacity", 0);
@@ -631,7 +627,6 @@ if(selhist) {
           .attr("width", exactwidth3)
           .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y3(d.y); })
           .on("mouseover", function(d) {
-            d3.select(this).style("fill", "#333");
             tooltip.transition()
                .duration(200)
                .style("opacity", .9);
@@ -640,7 +635,6 @@ if(selhist) {
                .style("top", (d3.event.pageY - 28) + "px");
           })
           .on("mouseout", function(d) {
-            d3.select(this).style("fill", "#ffa500");
             tooltip.transition()
                  .duration(500)
                  .style("opacity", 0);
@@ -742,7 +736,6 @@ if(selhist) {
           .attr("width", exactwidth4)
           .attr("height", function(d) { return height/2 - margin.top - margin.bottom - y4(d.y); })
           .on("mouseover", function(d) {
-            d3.select(this).style("fill", "#333");
             tooltip.transition()
                .duration(200)
                .style("opacity", .9);
@@ -751,7 +744,6 @@ if(selhist) {
                .style("top", (d3.event.pageY - 28) + "px");
           })
           .on("mouseout", function(d) {
-            d3.select(this).style("fill", "#ffa500");
             tooltip.transition()
                  .duration(500)
                  .style("opacity", 0);
