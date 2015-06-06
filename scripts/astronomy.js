@@ -338,6 +338,7 @@ function updateHist4(val) {
 }
 
 
+
 function createhist1(histwidth, formatCount, valshist1, val, selhist) {
   var tickshist1 = 10;
 
@@ -915,9 +916,48 @@ function createscatter(data, xvar, yvar) {
      yMap = function(d) { return yScale(yValue(d));}, // data -> display
      yAxis = d3.svg.axis().scale(yScale).orient("left");
 
+// clip outliers at 3 sigma
 
-     xScale.domain([d3.min(data, xValue)-0.2, d3.max(data, xValue)+0.2]);
-     yScale.domain([d3.min(data, yValue)-0.2, d3.max(data, yValue)+0.2]);
+lowcutX = d3.mean(data, xValue) - 3 * d3.deviation(data, xValue)
+highcutX = d3.mean(data, xValue) + 3 * d3.deviation(data, xValue) 
+
+if (lowcutX > d3.min(data, xValue)) {
+    minX = lowcutX
+} else { 
+    minX = d3.min(data, xValue)
+}
+
+if (highcutX < d3.max(data, xValue)) {
+    maxX = highcutX
+} else { 
+    maxX = d3.max(data, xValue)
+}
+
+
+lowcutY = d3.mean(data, yValue) - 3 * d3.deviation(data, yValue)
+highcutY = d3.mean(data, yValue) + 3 * d3.deviation(data, yValue) 
+
+if (lowcutY > d3.min(data, yValue)) {
+    minY = lowcutY
+} else { 
+    minY = d3.min(data, yValue)
+}
+
+if (highcutY < d3.max(data, yValue)) {
+    maxY = highcutY
+} else { 
+    maxY = d3.max(data, yValue)
+}
+
+     //xScale.domain([d3.min(data, xValue)-0.2, d3.max(data, xValue)+0.2]);
+     //yScale.domain([d3.min(data, yValue)-0.2, d3.max(data, yValue)+0.2]);
+
+     xScale.domain([minX-0.2, maxX+0.2]);
+     yScale.domain([minY-0.2, maxY+0.2]);
+
+
+// need to remove points outside 3 sigma from the plot!!!
+
 
   svg.append("g")
       .attr("class", "x axis scatter")
@@ -963,6 +1003,10 @@ function createscatter(data, xvar, yvar) {
         .attr("cx", xMap)
         .attr("cy", yMap)
         .style("fill", "#333")
+        .style("opacity", function(d) {            // remove outliers from chart
+            if (d[xvar] < minX || d[xvar] > maxX || d[yvar] < minY || d[yvar] > maxY) {return "0"} 
+            else    { return "1" }       
+        ;})   
         .on("mouseover", function(d) {
           d3.select(this).attr("r", 4 ).style("fill", "#4682b4");
           tooltip.transition()
