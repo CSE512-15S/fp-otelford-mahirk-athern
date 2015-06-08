@@ -3,7 +3,7 @@ width = $(window).width() - margin.left - margin.right,
 height = $(window).height() - margin.top - margin.bottom- 100,
 columns = ["z", "mass", "mass_err", "SFR", "sSFR", "Z_Mannucci", "Z_Dopita", "deltaZ", "Z_R23", "Z_NHa", "q", "surf_bright", "HaHb", "bdec_frac_err", "logR23", "logNHa", "OIII/OII", "NII/OII", "OIII/SII", "NII/SII", "Hbeta_ratio", "Hdelta_eqw", "D4000", "vdisp", "A_v"];
 
-var names = {"z":"Redshift", "mass":"Stellar Mass", "mass_err":"Mass Uncertainty", "SFR":"Star Formation Rate", "sSFR":"Specific Star Formation Rate", "Z_Mannucci":"Metallicity (M10)", "Z_Dopita":"Metallicity (D13)", "deltaZ":"Metallicity Difference (D13-M10)", "Z_R23":"Metallicity (R23)", "Z_NHa":"Metallicity (N/Halpha)", "q":"Ionization Parameter", "surf_bright":"Surface Brightness", "HaHb":"Balmer Decrement", "bdec_frac_err":"Balmer Decrement Fractional Error", "logR23":"R23", "logNHa":"N/Halpha", "OIII/OII":"OIII/OII", "NII/OII":"NII/OII", "OIII/SII":"OIII/SII", "NII/SII":"NII/SII", "Hbeta_ratio":"Hbeta Absorption/Emission", "Hdelta_eqw":"Hdelta Equivalent Width", "D4000":"D4000", "vdisp":"Velocity Dispersion", "A_v":"Extinction in V-band"};
+var names = {"z":"Redshift", "mass":"log Stellar Mass (M⊙)", "mass_err":"log Mass Uncertainty (M⊙)", "SFR":"log Star Formation Rate (M⊙/yr)", "sSFR":"log Specific Star Formation Rate (1/yr)", "Z_Mannucci":"Metallicity [M10]", "Z_Dopita":"Metallicity [D13]", "deltaZ":"Metallicity Difference [D13-M10]", "Z_R23":"Metallicity [R23]", "Z_NHa":"Metallicity [N/Halpha]", "q":"log Ionization Parameter (cm/s)", "surf_bright":"Surface Brightness (mag/square arcsec)", "HaHb":"Balmer Decrement", "bdec_frac_err":"Balmer Decrement Fractional Error", "logR23":"log R23", "logNHa":"log N/Halpha", "OIII/OII":"log OIII/OII", "NII/OII":"log NII/OII", "OIII/SII":"log OIII/SII", "NII/SII":"log NII/SII", "Hbeta_ratio":"Hbeta Absorption/Emission", "Hdelta_eqw":"Hdelta Equivalent Width (Å)", "D4000":"D4000", "vdisp":"Velocity Dispersion (km/s)", "A_v":"Extinction in V-band (mag)"};
 
 var valshist1 = [];
 var valshist2 = [];
@@ -24,11 +24,11 @@ maindiv.append("div").attr("class","mainselect").html('<b>Select Your Axis Varia
   		<option value="mass_err">Mass Uncertainty</option>\
   		<option value="SFR">Star Formation Rate</option>\
   		<option value="sSFR">Specific Star Formation Rate</option>\
-  		<option value="Z_Mannucci">Metallicity (M10)</option>\
-  		<option value="Z_Dopita">Metallicity (D13)</option>\
-  		<option value="deltaZ">Metallicity Difference (D13-M10)</option>\
-  		<option value="Z_R23">Metallicity (R23)</option>\
-  		<option value="Z_NHa">Metallicity (N/Halpha)</option>\
+  		<option value="Z_Mannucci">Metallicity [M10]</option>\
+  		<option value="Z_Dopita">Metallicity [D13]</option>\
+  		<option value="deltaZ">Metallicity Difference [D13-M10]</option>\
+  		<option value="Z_R23">Metallicity [R23]</option>\
+  		<option value="Z_NHa">Metallicity [N/Halpha]</option>\
   		<option value="q" selected="selected">Ionization Parameter</option>\
 		<option value="surf_bright">Surface Brightness</option>\
   		<option value="HaHb">Balmer Decrement</option>\
@@ -51,11 +51,11 @@ maindiv.append("div").attr("class","mainselect").html('<b>Select Your Axis Varia
         	<option value="mass_err">Mass Uncertainty</option>\
         	<option value="SFR">Star Formation Rate</option>\
         	<option value="sSFR" selected="selected">Specific Star Formation Rate</option>\
-        	<option value="Z_Mannucci">Metallicity (M10)</option>\
-        	<option value="Z_Dopita">Metallicity (D13)</option>\
-        	<option value="deltaZ">Metallicity Difference (D13-M10)</option>\
-        	<option value="Z_R23">Metallicity (R23)</option>\
-        	<option value="Z_NHa">Metallicity (N/Halpha)</option>\
+        	<option value="Z_Mannucci">Metallicity [M10]</option>\
+        	<option value="Z_Dopita">Metallicity [D13]</option>\
+        	<option value="deltaZ">Metallicity Difference [D13-M10]</option>\
+        	<option value="Z_R23">Metallicity [R23]</option>\
+        	<option value="Z_NHa">Metallicity [N/Halpha]</option>\
         	<option value="q">Ionization Parameter</option>\
       		<option value="surf_bright">Surface Brightness</option>\
         	<option value="HaHb">Balmer Decrement</option>\
@@ -916,10 +916,10 @@ function createscatter(data, xvar, yvar) {
      yMap = function(d) { return yScale(yValue(d));}, // data -> display
      yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-// clip outliers at 3 sigma
+// clip outliers at 5 sigma
 
-lowcutX = d3.mean(data, xValue) - 3 * d3.deviation(data, xValue)
-highcutX = d3.mean(data, xValue) + 3 * d3.deviation(data, xValue) 
+lowcutX = d3.mean(data, xValue) - 5 * d3.deviation(data, xValue)
+highcutX = d3.mean(data, xValue) + 5 * d3.deviation(data, xValue) 
 
 if (lowcutX > d3.min(data, xValue)) {
     minX = lowcutX
@@ -934,8 +934,8 @@ if (highcutX < d3.max(data, xValue)) {
 }
 
 
-lowcutY = d3.mean(data, yValue) - 3 * d3.deviation(data, yValue)
-highcutY = d3.mean(data, yValue) + 3 * d3.deviation(data, yValue) 
+lowcutY = d3.mean(data, yValue) - 5 * d3.deviation(data, yValue)
+highcutY = d3.mean(data, yValue) + 5 * d3.deviation(data, yValue) 
 
 if (lowcutY > d3.min(data, yValue)) {
     minY = lowcutY
@@ -956,9 +956,6 @@ if (highcutY < d3.max(data, yValue)) {
      yScale.domain([minY-0.2, maxY+0.2]);
 
 
-// need to remove points outside 3 sigma from the plot!!!
-
-
   svg.append("g")
       .attr("class", "x axis scatter")
       .attr('transform', 'translate(0, ' + (height - margin.top - margin.bottom) + ')')
@@ -966,7 +963,7 @@ if (highcutY < d3.max(data, yValue)) {
     .append("text")
       .attr("class", "label")
       .attr("dx", 2*width/3-margin.left)
-      .attr("dy", "3em")
+      .attr("dy", "2.5em")
       .style("text-anchor", "end")
       .text(names[xvar]);
 
@@ -1007,7 +1004,8 @@ if (highcutY < d3.max(data, yValue)) {
             if (d[xvar] < minX || d[xvar] > maxX || d[yvar] < minY || d[yvar] > maxY) {return "0"} 
             else    { return "1" }       
         ;})   
-        .on("mouseover", function(d) {
+        .on("mouseover", function(d) {		   // only show tooltip for non-outlying points
+	  if (d[xvar] > minX && d[xvar] < maxX && d[yvar] > minY && d[yvar] < maxY) {
           d3.select(this).attr("r", 4 ).style("fill", "#4682b4");
           tooltip.transition()
                .duration(200)
@@ -1015,6 +1013,9 @@ if (highcutY < d3.max(data, yValue)) {
           tooltip.html("<div class=\"tip\">" +  yvar + ": " + d[yvar] + "<br/>" + xvar + ": "  + d[xvar] + "</div>")
                .style("left", (d3.event.pageX + 10) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
+      } // end of if statement
+	  else {
+      }
       })
       .on("mouseout", function(d) {
         if (d3.select(this).classed("selected")) {
@@ -1055,7 +1056,7 @@ function brushmove(p) {
             && e[0][1] < yValue(d) && yValue(d) < e[1][1];
 
     if (isSelected) {
-      // change to orange
+      // change to blue
       d3.select(this).attr("r", 3.5 ).style("fill", "#ffa500");
     } else {
       // keep black
