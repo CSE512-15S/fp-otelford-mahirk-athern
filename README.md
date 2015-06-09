@@ -1,8 +1,6 @@
 Galaxy Explorer
 ===============
-Nicole Atherly (athern@uw.edu)
-Mahir Kothary (mahirk@uw.edu)
-Grace Telford (otelford@uw.edu)
+Nicole Atherly (athern@uw.edu), Mahir Kothary (mahirk@uw.edu), and Grace Telford (otelford@uw.edu)
 
 ## Summary Image
 ![Overview](https://github.com/CSE512-15S/fp-otelford-mahirk-athern/raw/gh-pages/summary.png)
@@ -31,10 +29,10 @@ The end result is a tool that meets the design requirements we outlined at the s
 #### Division of Labor
 
 Nicole:
-  -
+  - Brushing and linking
 
 Mahir:
-  - 
+  - HTML/CSS; overall design
 
 Grace:
   - Project idea and data curation
