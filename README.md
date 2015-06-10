@@ -32,7 +32,9 @@ Nicole:
   - Brushing and linking
 
 Mahir:
-  - HTML/CSS; overall design
+  - Overall design and User Interface (HTML/CSS)
+  - Application Base 
+  - Data Binning and Connections
 
 Grace:
   - Project idea and data curation
