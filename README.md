@@ -41,6 +41,7 @@ Mahir:
   - Overall design and User Interface (HTML/CSS)
   - Application Base 
   - Data Binning and Connections
+  - Contribution to the final paper
 
 Grace:
   - Project idea and data curation
