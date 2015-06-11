@@ -24,6 +24,8 @@ Early on, we found an issue with the format of our dataset that led to certain r
 
 Next, it becaome clear that outlying points in the data were causing the plots we generated to look very bad. We handled this by setting the axis limits equal to the mean value of each parameter +/- 3 times the standard deviation and demanding that each histogram has 10 equally spaced bins. Outliers in the scatter plot are made invisible.
 
+The main view in our tool is a scatter plot, which obviously suffers from some obscuration issues given that we are plotting 10,000 points. We experimented with reducing the opacity of the points so that the denser regions of the plot would be obvious, but this slowed the  rendering of the figures to an unacceptable level. We decided to keep the points opaque, but hope to add the ability to switch between a scatter plot and heat map in the future to better show the density of points in each two-dimensional projection.
+
 The end result is a tool that meets the design requirements we outlined at the start and has attracted interest from users who would like to explore many different types of high-dimensional datasets.
 
 #### Division of Labor
