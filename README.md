@@ -31,10 +31,14 @@ The end result is a tool that meets the design requirements we outlined at the s
 #### Division of Labor
 
 Nicole:
-  - Brushing and linking
+  - Brushing and linking, histogram selection bar updates
+  - Histogram tooltips
+  - Contributions to final paper and initial research
 
 Mahir:
-  - HTML/CSS; overall design
+  - Overall design and User Interface (HTML/CSS)
+  - Application Base 
+  - Data Binning and Connections
 
 Grace:
   - Project idea and data curation
