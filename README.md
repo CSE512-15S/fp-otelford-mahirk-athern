@@ -26,6 +26,8 @@ Next, it becaome clear that outlying points in the data were causing the plots w
 
 The main view in our tool is a scatter plot, which obviously suffers from some obscuration issues given that we are plotting 10,000 points. We experimented with reducing the opacity of the points so that the denser regions of the plot would be obvious, but this slowed the  rendering of the figures to an unacceptable level. We decided to keep the points opaque, but hope to add the ability to switch between a scatter plot and heat map in the future to better show the density of points in each two-dimensional projection.
 
+The basic brushing selection box was simple to implement, but adding the histogram bars was more difficult. We found a few things difficult in this process. The first was that trying to draw in the additional histogram bars while in the middle of selecting points caused the brushing process to be very slow. Instead, we draw the bars once the brushing has ended. The second issue was that we could not simply draw the new bars in the brush end code, but rather had to remove each histogram completely and redraw them from scratch, with the addition of the new bars. Otherwise, they would not update correctly and it would seem that nothing changed after the first selection.
+
 The end result is a tool that meets the design requirements we outlined at the start and has attracted interest from users who would like to explore many different types of high-dimensional datasets.
 
 #### Division of Labor
